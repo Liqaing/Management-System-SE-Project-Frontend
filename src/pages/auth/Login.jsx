@@ -9,15 +9,24 @@ import {
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import LinkBtn from "../../components/ui/Link";
+import axios from "axios";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     // handle login logic here
     console.log("Email:", email, "Password:", password);
+    axios({
+      method: "get",
+      url: "/api", // This should be handled by your backend
+    }).then(function (response) {
+      console.log("axios", response);
+      console.log(response.request);
+      console.log(response.data);
+    });
   };
 
   return (
