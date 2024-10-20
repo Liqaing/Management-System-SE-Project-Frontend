@@ -11,7 +11,6 @@ import {
 } from "@mui/material";
 import { Notifications as NotificationsIcon } from "@mui/icons-material";
 import LinkBtn from "./ui/Link";
-// import { Link } from "react-router-dom";
 
 // const navigation = [
 //   { name: "Dashboard", href: "#", current: true },
@@ -105,7 +104,7 @@ export default function Navbar() {
                 Login
               </LinkBtn>
               <LinkBtn
-                to="/auth/singup"
+                to="/auth/signup"
                 sx={{ color: "white", padding: "8px" }}
               >
                 Sign Up

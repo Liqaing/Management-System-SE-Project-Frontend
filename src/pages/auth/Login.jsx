@@ -6,10 +6,9 @@ import {
   Button,
   Typography,
   Avatar,
-  Grid,
-  Link,
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import LinkBtn from "../../components/ui/Link";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -70,18 +69,10 @@ const LoginPage = () => {
           >
             Sign In
           </Button>
-          <Grid container>
-            <Grid item xs>
-              <Link href="#" variant="body2">
-                Forgot password?
-              </Link>
-            </Grid>
-            <Grid item>
-              <Link href="#" variant="body2">
-                {"Don't have an account? Sign Up"}
-              </Link>
-            </Grid>
-          </Grid>
+
+          <LinkBtn to="/auth/signup" variant="body2">
+            {"Don't have an account? Sign Up"}
+          </LinkBtn>
         </Box>
       </Box>
     </Container>

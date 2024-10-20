@@ -8,9 +8,9 @@ import {
   Typography,
   Avatar,
   Stack,
-  Link,
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import LinkBtn from "../../components/ui/Link";
 
 const SignUpPage = () => {
   const [firstName, setFirstName] = useState("");
@@ -118,9 +118,9 @@ const SignUpPage = () => {
             Sign Up
           </Button>
           <Stack direction="row" justifyContent="flex-end">
-            <Link href="#" variant="body2">
-              {"Already have an account? Sign In"}
-            </Link>
+            <LinkBtn to="/auth/login" variant="body2">
+              {"Already have an account? Login"}
+            </LinkBtn>
           </Stack>
         </Box>
       </Box>
