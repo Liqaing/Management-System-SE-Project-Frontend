@@ -1,14 +1,10 @@
 import "./App.css";
-import { Button } from "./components/ui/button";
-import { Label } from "./components/ui/label";
+import NavBar from "./components/NavBar";
 
 function App() {
   return (
     <>
-      <div>Heeelloo</div>
-      <div>Hello</div>
-      <Label>Hello</Label>
-      <Button>Hello</Button>
+      <NavBar />
     </>
   );
 }
