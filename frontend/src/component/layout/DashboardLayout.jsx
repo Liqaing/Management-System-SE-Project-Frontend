@@ -20,8 +20,10 @@ import {
   Space,
   theme,
 } from "antd";
-import { Outlet } from "react-router-dom";
+import { Outlet , useNavigate } from "react-router-dom";
+
 const { Header, Content, Footer, Sider } = Layout;
+
 function getItem(label, key, icon, children) {
   return {
     key,
@@ -69,44 +71,50 @@ const items = [
   ]),
 ];
 
-const handleOnClickLogOut = () => {};
+const handleOnClickLogOut = () => {
+  window.location.href = "/dashboard/login";
+};
 
-const itemsProfile = [
-  {
-    key: "1",
-    label: (
-      <a
-        target="_blank"
-        rel="noopener noreferrer"
-        href="https://www.antgroup.com"
-      >
-        My Account
-      </a>
-    ),
-  },
-  {
-    key: "2",
-    label: (
-      <a
-        target="_blank"
-        rel="noopener noreferrer"
-        href="https://www.aliyun.com"
-      >
-        Change Password
-      </a>
-    ),
-  },
-  {
-    key: "3",
-    label: <a onClick={handleOnClickLogOut}>Logout</a>,
-  },
-];
+
 
 const DashboardLayout = () => {
+  const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
+
+
+  const itemsProfile = [
+    {
+      key: "1",
+      label: (
+        <a
+          target="_blank"
+          rel="noopener noreferrer"
+          href="https://www.antgroup.com"
+        >
+          My Account
+        </a>
+      ),
+    },
+    {
+      key: "2",
+      label: (
+        <a
+          target="_blank"
+          rel="noopener noreferrer"
+          href="https://www.aliyun.com"
+        >
+          Change Password
+        </a>
+      ),
+    },
+    {
+      key: "3",
+      label: <a onClick={handleOnClickLogOut}>Logout</a>,
+    },
+  ];
 
   return (
     <Layout

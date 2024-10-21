@@ -5,6 +5,9 @@ import HomePage from "./page/home/HomePage";
 import DashboardLayout from "./component/layout/DashboardLayout";
 import HomePageDash from "./page-dash/home/HomePageDash";
 import NotFoundPage from "./page/error/404";
+import LayoutAuth from "./component/layout/LayoutAuth";
+import LoginPage from "./auth/LoginPage";
+import RegisterPage from "./auth/RegisterPage";
 
 const App = () => {
   return (
@@ -21,6 +24,13 @@ const App = () => {
         <Route path="/dashboard" element={<DashboardLayout />}>
           <Route path="" element={<HomePageDash />}></Route>
           <Route path="home" element={<HomePageDash />}></Route>
+          <Route path='*' element={<NotFoundPage />}></Route>
+        </Route>
+
+        {/* Login Route */}
+        <Route path='/dashboard' element={<LayoutAuth />}>
+          <Route path='login' element={<LoginPage />}></Route>
+          <Route path='register' element={<RegisterPage />}></Route>
           <Route path='*' element={<NotFoundPage />}></Route>
         </Route>
         

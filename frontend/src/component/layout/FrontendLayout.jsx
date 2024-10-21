@@ -13,7 +13,7 @@ const items = [
   { key: "kids", label: "Kids Menu" },
   { key: "deals", label: "Deals & Combos" },
   { key: "desserts", label: "Desserts" },
-  { key: "login", label: "Login" },
+  { key: "dashboard/login", label: "Login" },
 ];
 
 const FrontendLayout = () => {
