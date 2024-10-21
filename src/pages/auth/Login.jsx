@@ -6,30 +6,36 @@ import {
   Button,
   Typography,
   Avatar,
-  useRadioGroup,
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import LinkBtn from "../../components/ui/Link";
 import axios from "axios";
+import ErrorAlert from "../../components/ui/Alert";
 
 const LoginPage = () => {
-  const [username, setUsername] = useState("");
+  const [telephone, setTelephone] = useState("");
   const [password, setPassword] = useState("");
-  // const []
+  const [error, setError] = useState(null); // Use null to easily check for error state
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    // handle login logic here
-    console.log("Email:", email, "Password:", password);
 
-    axios({
-      method: "get",
-      url: "/api", // This should be handled by your backend
-    }).then(function (response) {
-      console.log("axios", response);
-      console.log(response.request);
-      console.log(response.data);
-    });
+    // Clear the previous error before making a new request
+    setError(null);
+
+    try {
+      const response = await axios.post("/api/auth/login", {
+        telephone: telephone,
+        password: password,
+      });
+      console.log(response);
+    } catch (err) {
+      // Handle error and set the error message
+      setError({
+        title: "Login Failed",
+        msg: err.response?.data?.message || "An error occurred during login.",
+      });
+    }
   };
 
   return (
@@ -53,12 +59,12 @@ const LoginPage = () => {
             margin="normal"
             required
             fullWidth
-            id="username"
-            label="Username"
-            name="username"
+            id="telephone"
+            label="Telephone"
+            name="telephone"
             autoFocus
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            value={telephone}
+            onChange={(e) => setTelephone(e.target.value)}
           />
           <TextField
             margin="normal"
@@ -86,6 +92,9 @@ const LoginPage = () => {
           </LinkBtn>
         </Box>
       </Box>
+
+      {/* Render ErrorAlert only if an error exists */}
+      {error && <ErrorAlert title={error.title} msg={error.msg} />}
     </Container>
   );
 };

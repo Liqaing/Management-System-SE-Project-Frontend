@@ -30,16 +30,6 @@ const SignUpPage = () => {
       throw Error("Password is not same");
     }
 
-    // handle sign-up logic here
-    axios({
-      method: "get",
-      url: "/api", // This should be handled by your backend
-    }).then(function (response) {
-      console.log("axios", response);
-      console.log(response.request);
-      console.log(response.data);
-    });
-
     axios
       .post("/api/auth/signup", {
         username: username,
