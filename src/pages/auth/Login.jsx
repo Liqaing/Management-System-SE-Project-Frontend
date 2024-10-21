@@ -6,19 +6,22 @@ import {
   Button,
   Typography,
   Avatar,
+  useRadioGroup,
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import LinkBtn from "../../components/ui/Link";
 import axios from "axios";
 
 const LoginPage = () => {
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  // const []
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     // handle login logic here
     console.log("Email:", email, "Password:", password);
+
     axios({
       method: "get",
       url: "/api", // This should be handled by your backend
@@ -50,13 +53,12 @@ const LoginPage = () => {
             margin="normal"
             required
             fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
+            id="username"
+            label="Username"
+            name="username"
             autoFocus
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
           />
           <TextField
             margin="normal"

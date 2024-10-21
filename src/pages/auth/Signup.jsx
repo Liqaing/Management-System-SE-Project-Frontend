@@ -11,27 +11,44 @@ import {
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import LinkBtn from "../../components/ui/Link";
+import axios from "axios";
 
 const SignUpPage = () => {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
+  const [telephone, setTelephone] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const handleSubmit = (event) => {
     event.preventDefault();
+
+    if (!username || !telephone || !password || !confirmPassword) {
+      throw Error("Invalid input");
+    }
+
+    if (password != confirmPassword) {
+      throw Error("Password is not same");
+    }
+
     // handle sign-up logic here
-    console.log(
-      "First Name:",
-      firstName,
-      "Last Name:",
-      lastName,
-      "Email:",
-      email,
-      "Password:",
-      password
-    );
+    axios({
+      method: "get",
+      url: "/api", // This should be handled by your backend
+    }).then(function (response) {
+      console.log("axios", response);
+      console.log(response.request);
+      console.log(response.data);
+    });
+
+    axios
+      .post("/api/auth/signup", {
+        username: username,
+        telephone: telephone,
+        password: password,
+      })
+      .then((req) => {
+        console.log(req);
+      });
   };
 
   return (
@@ -52,38 +69,27 @@ const SignUpPage = () => {
         </Typography>
         <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
           <TextField
+            color="black"
             margin="normal"
             required
             fullWidth
-            id="firstName"
-            label="First Name"
-            name="firstName"
+            id="username"
+            label="Username"
+            name="username"
             autoComplete="given-name"
             autoFocus
-            value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
           />
           <TextField
             margin="normal"
             required
             fullWidth
-            id="lastName"
-            label="Last Name"
-            name="lastName"
-            autoComplete="family-name"
-            value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
-          />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            id="telephone"
+            label="Telephone"
+            name="telephone"
+            value={telephone}
+            onChange={(e) => setTelephone(e.target.value)}
           />
           <TextField
             margin="normal"
