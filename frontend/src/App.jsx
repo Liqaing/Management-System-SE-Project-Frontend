@@ -1,18 +1,32 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import FrontendLayout from "./component/layout/FrontendLayout";
+import HomePage from "./page/home/HomePage";
+import DashboardLayout from "./component/layout/DashboardLayout";
+import HomePageDash from "./page-dash/home/HomePageDash";
+import NotFoundPage from "./page/error/404";
 
-function App() {
-  const [count, setCount] = useState(0)
-
+const App = () => {
   return (
-    <>
-      <div>
-        Hello
-      </div>      
-    </>
-  )
-}
+    <BrowserRouter>
+      <Routes>
+        {/* frontend route */}
+        <Route path="/" element={<FrontendLayout />}>
+          <Route path="" element={<HomePage />}></Route>
+          <Route path="home" element={<HomePage />}></Route>
+          <Route path='*' element={<NotFoundPage />}></Route>
+        </Route>
 
-export default App
+        {/* backend route */}
+        <Route path="/dashboard" element={<DashboardLayout />}>
+          <Route path="" element={<HomePageDash />}></Route>
+          <Route path="home" element={<HomePageDash />}></Route>
+          <Route path='*' element={<NotFoundPage />}></Route>
+        </Route>
+        
+      </Routes>
+    </BrowserRouter>
+  );
+};
+
+export default App;
