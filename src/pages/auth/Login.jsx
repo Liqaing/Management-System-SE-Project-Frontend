@@ -15,7 +15,7 @@ import ErrorAlert from "../../components/ui/Alert";
 const LoginPage = () => {
   const [telephone, setTelephone] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState(null); // Use null to easily check for error state
+  const [error, setError] = useState(null);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -33,7 +33,9 @@ const LoginPage = () => {
       // Handle error and set the error message
       setError({
         title: "Login Failed",
-        msg: err.response?.data?.message || "An error occurred during login.",
+        msg:
+          err.response?.data?.error.message ||
+          "An error occurred during login.",
       });
     }
   };
