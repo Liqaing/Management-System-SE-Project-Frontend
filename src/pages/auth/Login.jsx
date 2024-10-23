@@ -23,21 +23,23 @@ const LoginPage = () => {
     // Clear the previous error before making a new request
     setError(null);
 
-    try {
-      const response = await axios.post("/api/auth/login", {
+    axios
+      .post("/api/auth/login", {
         telephone: telephone,
         password: password,
+      })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        // Handle error and set the error message
+        setError({
+          title: "Login Failed",
+          msg:
+            err.response?.data?.error.message ||
+            "An error occurred during login.",
+        });
       });
-      console.log(response);
-    } catch (err) {
-      // Handle error and set the error message
-      setError({
-        title: "Login Failed",
-        msg:
-          err.response?.data?.error.message ||
-          "An error occurred during login.",
-      });
-    }
   };
 
   return (

@@ -38,6 +38,9 @@ const SignUpPage = () => {
       })
       .then((req) => {
         console.log(req);
+      })
+      .catch((err) => {
+        console.log(err);
       });
   };
 
