@@ -29,10 +29,11 @@ const LoginPage = () => {
         password: password,
       })
       .then((res) => {
-        console.log(res);
+        const data = res.data;
+        localStorage.setItem("userRole", data.role);
+        localStorage.setItem("userName", data.username);
       })
       .catch((err) => {
-        // Handle error and set the error message
         setError({
           title: "Login Failed",
           msg:
@@ -97,7 +98,6 @@ const LoginPage = () => {
         </Box>
       </Box>
 
-      {/* Render ErrorAlert only if an error exists */}
       {error && <ErrorAlert title={error.title} msg={error.msg} />}
     </Container>
   );
