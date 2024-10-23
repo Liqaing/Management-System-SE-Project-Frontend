@@ -3,13 +3,17 @@ import LoginPage from "./pages/auth/login.jsx";
 import SignUpPage from "./pages/auth/signup.jsx";
 import Layout from "./pages/Layout.jsx";
 import ErrorPage from "./pages/error/Error.jsx";
+import HomePage from "./pages/home/home.jsx";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Layout />,
+    element: <HomePage />,
+    errorElement: <ErrorPage />,
+    children: [],
   },
   {
+    // Auth Route
     path: "auth",
     element: <Layout />,
     errorElement: <ErrorPage />,
