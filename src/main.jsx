@@ -4,12 +4,15 @@ import "./index.css";
 import { RouterProvider } from "react-router-dom";
 import { ThemeProvider } from "@mui/material";
 import theme from "./theme.js";
-import router from "./routes.jsx";
+import router from "./utils/routeHandler/routes.jsx";
+import { AppProvider } from "./utils/context.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <ThemeProvider theme={theme}>
-      <RouterProvider router={router} />
-    </ThemeProvider>
+    <AppProvider>
+      <ThemeProvider theme={theme}>
+        <RouterProvider router={router} />
+      </ThemeProvider>
+    </AppProvider>
   </StrictMode>
 );

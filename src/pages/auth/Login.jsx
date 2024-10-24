@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import {
   Container,
   Box,
@@ -11,8 +11,16 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import LinkBtn from "../../components/ui/Link";
 import axios from "axios";
 import ErrorAlert from "../../components/ui/Alert";
+import { Navigate } from "react-router-dom";
+import { AppContext } from "../../utils/context.jsx";
 
 const LoginPage = () => {
+  const { user, setUser } = useContext(AppContext);
+
+  if (user?.isLogin) {
+    return <Navigate to="/" replace />;
+  }
+
   const [telephone, setTelephone] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
@@ -30,8 +38,12 @@ const LoginPage = () => {
       })
       .then((res) => {
         const data = res.data;
-        localStorage.setItem("userRole", data.role);
-        localStorage.setItem("userName", data.username);
+        const userData = {
+          isLogin: true,
+          username: data.username,
+          role: data.role,
+        };
+        setUser(userData);
       })
       .catch((err) => {
         setError({
