@@ -6,11 +6,13 @@ import {
   Menu,
   MenuItem,
   Avatar,
-  Button,
   Box,
+  Typography,
 } from "@mui/material";
 import { Notifications as NotificationsIcon } from "@mui/icons-material";
 import LinkBtn from "./ui/Link";
+import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
+import Logout from "../pages/auth/Logout";
 
 // const navigation = [
 //   { name: "Dashboard", href: "#", current: true },
@@ -39,36 +41,16 @@ export default function Navbar() {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static" sx={{ bgcolor: "" }}>
+      <AppBar position="static" sx={{ backgroundColor: "primary.main" }}>
         <Toolbar>
           <Box
             component="div"
             sx={{ flexGrow: 1, display: "flex", alignItems: "center" }}
           >
-            <img
-              alt="Your Company"
-              src="https://tailwindui.com/plus/img/logos/mark.svg?color=indigo&shade=500"
-              className="h-8 w-auto"
-              style={{ height: "32px" }}
-            />
-            {/* Navigation Links */}
-            <Box sx={{ display: { xs: "none", sm: "block" }, ml: 2 }}>
-              <Button
-                href="#"
-                sx={{
-                  color: "white",
-                  bgcolor: "gray.900",
-                  "&:hover": {
-                    bgcolor: "gray.700",
-                    color: "white",
-                  },
-                  ml: 1,
-                  textTransform: "none",
-                }}
-              >
-                Home
-              </Button>
-            </Box>
+            <RestaurantMenuIcon sx={{ mr: 2 }} />
+            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+              Restaurant Management System
+            </Typography>
           </Box>
 
           {/* Right side - Notification and Profile */}
@@ -99,16 +81,21 @@ export default function Navbar() {
             </Box>
 
             {/* Spacing between Login and Signup buttons */}
-            <Box>
-              <LinkBtn to="/auth/login" sx={{ color: "white", padding: "8px" }}>
+            <Box sx={{ display: "flex" }}>
+              <LinkBtn
+                to="/auth/login"
+                sx={{ color: "white", padding: "8px", display: "block" }}
+              >
                 Login
               </LinkBtn>
               <LinkBtn
                 to="/auth/signup"
-                sx={{ color: "white", padding: "8px" }}
+                sx={{ color: "white", padding: "8px", display: "block" }}
               >
                 Sign Up
               </LinkBtn>
+
+              <Logout />
             </Box>
           </Box>
         </Toolbar>

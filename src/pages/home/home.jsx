@@ -1,24 +1,29 @@
 import {
-  AppBar,
-  Toolbar,
   Typography,
   Box,
-  Grid,
-  Paper,
   Button,
   Card,
   CardContent,
   CardMedia,
   Container,
+  Grid2,
 } from "@mui/material";
-import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
 import LocalDiningIcon from "@mui/icons-material/LocalDining";
 import TableRestaurantIcon from "@mui/icons-material/TableRestaurant";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import table from "../../assets/table.jpg";
+import staff from "../../assets/staff.jpg";
+import order from "../../assets/order.jpg";
+import report from "../../assets/report.jpg";
+import menu from "../../assets/menu.jpg";
+import { Menu, Report } from "@mui/icons-material";
+import Navbar from "../../components/NavBar";
 
 const HomePage = () => {
   return (
     <Box>
+      <Navbar />
+
       {/* Main Content */}
       <Container maxWidth="lg" sx={{ mt: 5 }}>
         <Typography variant="h4" gutterBottom>
@@ -28,14 +33,14 @@ const HomePage = () => {
           Easily manage tables, orders, and staff with our powerful system.
         </Typography>
 
-        <Grid container spacing={4}>
+        <Grid2 container spacing={4}>
           {/* Card 1: Manage Orders */}
-          <Grid item xs={12} sm={6} md={4}>
+          <Grid2 item xs={12} sm={6} md={4}>
             <Card sx={{ maxWidth: 345 }}>
               <CardMedia
                 component="img"
                 height="140"
-                image="https://source.unsplash.com/featured/?food"
+                image={order}
                 alt="Manage Orders"
               />
               <CardContent>
@@ -51,15 +56,15 @@ const HomePage = () => {
                 Manage Orders
               </Button>
             </Card>
-          </Grid>
+          </Grid2>
 
           {/* Card 2: Manage Tables */}
-          <Grid item xs={12} sm={6} md={4}>
+          <Grid2 item xs={12} sm={6} md={4}>
             <Card sx={{ maxWidth: 345 }}>
               <CardMedia
                 component="img"
                 height="140"
-                image="https://source.unsplash.com/featured/?restaurant"
+                image={table}
                 alt="Manage Tables"
               />
               <CardContent>
@@ -74,15 +79,15 @@ const HomePage = () => {
                 Manage Tables
               </Button>
             </Card>
-          </Grid>
+          </Grid2>
 
           {/* Card 3: Manage Staff */}
-          <Grid item xs={12} sm={6} md={4}>
+          <Grid2 item xs={12} sm={6} md={4}>
             <Card sx={{ maxWidth: 345 }}>
               <CardMedia
                 component="img"
                 height="140"
-                image="https://source.unsplash.com/featured/?people"
+                image={staff}
                 alt="Manage Staff"
               />
               <CardContent>
@@ -97,8 +102,55 @@ const HomePage = () => {
                 Manage Staff
               </Button>
             </Card>
-          </Grid>
-        </Grid>
+          </Grid2>
+
+          {/* Card 4: Manage Menu */}
+          <Grid2 item xs={12} sm={6} md={4}>
+            <Card sx={{ maxWidth: 345 }}>
+              <CardMedia
+                component="img"
+                height="140"
+                image={menu}
+                alt="Manage menu"
+              />
+              <CardContent>
+                <Typography gutterBottom variant="h5" component="div">
+                  Manage Menu
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Track and manage menu in the restaurant.
+                </Typography>
+              </CardContent>
+              <Button size="small" startIcon={<Menu />}>
+                Manage Menu
+              </Button>
+            </Card>
+          </Grid2>
+
+          {/* Card 5: Report */}
+          <Grid2 item xs={12} sm={6} md={4}>
+            <Card sx={{ maxWidth: 345 }}>
+              <CardMedia
+                component="img"
+                height="140"
+                image={report}
+                alt="Report"
+              />
+              <CardContent>
+                <Typography gutterBottom variant="h5" component="div">
+                  Report
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Track and keep in touch with your restaurant with details
+                  report.
+                </Typography>
+              </CardContent>
+              <Button size="small" startIcon={<Report />}>
+                Report
+              </Button>
+            </Card>
+          </Grid2>
+        </Grid2>
       </Container>
     </Box>
   );

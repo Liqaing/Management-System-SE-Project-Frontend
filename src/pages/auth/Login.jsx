@@ -16,14 +16,13 @@ import { AppContext } from "../../utils/context.jsx";
 
 const LoginPage = () => {
   const { user, setUser } = useContext(AppContext);
-
-  if (user?.isLogin) {
-    return <Navigate to="/" replace />;
-  }
-
   const [telephone, setTelephone] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
+
+  if (user) {
+    return <Navigate to="/" replace />;
+  }
 
   const handleSubmit = async (event) => {
     event.preventDefault();

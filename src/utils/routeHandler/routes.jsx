@@ -4,11 +4,16 @@ import SignUpPage from "../../pages/auth/signup.jsx";
 import Layout from "../../pages/Layout.jsx";
 import ErrorPage from "../../pages/error/Error.jsx";
 import HomePage from "../../pages/home/home.jsx";
+import ProtectedRoute from "./protectedRoute.jsx";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <HomePage />,
+    element: (
+      <ProtectedRoute>
+        <HomePage />
+      </ProtectedRoute>
+    ),
     errorElement: <ErrorPage />,
     children: [],
   },

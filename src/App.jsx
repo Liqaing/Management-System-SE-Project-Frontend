@@ -1,10 +1,11 @@
 import { RouterProvider } from "react-router-dom";
 import router from "./utils/routeHandler/routes";
-import { useContext } from "react";
-import { AppContext } from "./utils/context";
+import { useContext, useEffect } from "react";
+import { AppContext } from "./utils/context.jsx";
+import axios from "axios";
 
 const App = () => {
-  const { user, setUser } = useContext(AppContext);
+  const { setUser } = useContext(AppContext);
 
   useEffect(() => {
     axios
@@ -18,10 +19,10 @@ const App = () => {
         };
         setUser(userData);
       })
-      .catch((err) => {
+      .catch(() => {
         setUser(null);
       });
-  }, []);
+  }, [setUser]);
   return <RouterProvider router={router} />;
 };
 

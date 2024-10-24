@@ -1,16 +1,20 @@
-import axios from "axios";
-import { createContext, useEffect, useState } from "react";
+import PropTypes from "prop-types";
+import { createContext, useState } from "react";
 
 const AppContext = createContext();
 
-const AppProvider = ({ children }) => {
+const AppProvider = (props) => {
   const [user, setUser] = useState(null);
 
   return (
     <AppContext.Provider value={{ user, setUser }}>
-      {children}
+      {props.children}
     </AppContext.Provider>
   );
+};
+
+AppProvider.propTypes = {
+  children: PropTypes.node,
 };
 
 export { AppContext, AppProvider };
