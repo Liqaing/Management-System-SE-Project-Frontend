@@ -2,7 +2,7 @@ import { useContext, useState } from "react";
 import { AppContext } from "../../utils/context";
 import { Box, Button } from "@mui/material";
 import axios from "axios";
-import ErrorAlert from "../../components/ui/Alert";
+// import ErrorAlert from "../../components/ui/Alert";
 
 const Logout = () => {
   const { user, setUser } = useContext(AppContext);
@@ -42,7 +42,7 @@ const Logout = () => {
           </Button>
         </Box>
       )}
-      {error && <ErrorAlert title={error.title} msg={error.msg} />}
+      {/* {error && <ErrorAlert title={error.title} msg={error.msg} />} */}
     </>
   );
 };

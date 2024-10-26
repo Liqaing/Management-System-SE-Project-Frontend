@@ -8,10 +8,10 @@ import {
   Avatar,
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import LinkBtn from "../../components/ui/Link";
+// import LinkBtn from "../../components/ui/Link";
 import axios from "axios";
-import ErrorAlert from "../../components/ui/Alert";
-import { Navigate } from "react-router-dom";
+// import ErrorAlert from "../../components/ui/Alert";
+import { Link, Navigate } from "react-router-dom";
 import { AppContext } from "../../utils/context.jsx";
 
 const LoginPage = () => {
@@ -103,13 +103,13 @@ const LoginPage = () => {
             Sign In
           </Button>
 
-          <LinkBtn to="/auth/signup" variant="body2">
+          <Link to="/auth/signup" variant="body2">
             {"Don't have an account? Sign Up"}
-          </LinkBtn>
+          </Link>
         </Box>
       </Box>
 
-      {error && <ErrorAlert title={error.title} msg={error.msg} />}
+      {/* {error && <ErrorAlert title={error.title} msg={error.msg} />} */}
     </Container>
   );
 };

@@ -10,8 +10,9 @@ import {
   Stack,
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import LinkBtn from "../../components/ui/Link";
+// import LinkBtn from "../../components/ui/Link";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 const SignUpPage = () => {
   const [username, setUsername] = useState("");
@@ -117,9 +118,9 @@ const SignUpPage = () => {
             Sign Up
           </Button>
           <Stack direction="row" justifyContent="flex-end">
-            <LinkBtn to="/auth/login" variant="body2">
+            <Link to="/auth/login" variant="body2">
               {"Already have an account? Login"}
-            </LinkBtn>
+            </Link>
           </Stack>
         </Box>
       </Box>

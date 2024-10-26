@@ -1,6 +1,6 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
-import LoginPage from "../../pages/auth/Login.jsx";
-import HomePage from "../../pages/home/home.jsx";
+import LoginPage from "../../auth/LoginPage.jsx";
+import HomePage from "../../page/home/HomePage.jsx";
 import ProtectedRoute from "./protectedRoute.jsx";
 import FrontendLayout from "../../component/layout/FrontendLayout.jsx";
 import DashboardLayout from "../../component/layout/DashboardLayout.jsx";
