@@ -1,4 +1,4 @@
-import React from "react";
+import { useContext, useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import FrontendLayout from "./component/layout/FrontendLayout";
 import HomePage from "./page/home/HomePage";
@@ -8,8 +8,11 @@ import NotFoundPage from "./page/error/404";
 import LayoutAuth from "./component/layout/LayoutAuth";
 import LoginPage from "./auth/LoginPage";
 import RegisterPage from "./auth/RegisterPage";
+import axios from "axios";
+import { AppContext } from "./utils/context";
 
 const App = () => {
+  const { setUser } = useContext(AppContext);
   useEffect(() => {
     axios
       .post("/api/auth/token")

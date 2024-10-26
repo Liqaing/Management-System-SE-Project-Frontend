@@ -1,12 +1,10 @@
-import React from "react";
 import CarouselHome from "../../component/carousel/CarouselHome";
 
 const HomePage = () => {
   return (
     <>
-     <CarouselHome />
+      <CarouselHome />
       {/* <div>HomePage</div> */}
-     
     </>
   );
 };

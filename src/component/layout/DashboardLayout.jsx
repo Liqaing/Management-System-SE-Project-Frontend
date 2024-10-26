@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import logo from "../../assets/logo/logo.png";
 import { DownOutlined } from "@ant-design/icons";
 import {
@@ -20,7 +20,7 @@ import {
   Space,
   theme,
 } from "antd";
-import { Outlet , useNavigate } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -75,15 +75,12 @@ const handleOnClickLogOut = () => {
   window.location.href = "/dashboard/login";
 };
 
-
-
 const DashboardLayout = () => {
   const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
-
 
   const itemsProfile = [
     {
