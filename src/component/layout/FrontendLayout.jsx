@@ -3,7 +3,7 @@ import { Outlet, useNavigate } from "react-router-dom";
 import { Breadcrumb, Layout, Menu, theme } from "antd";
 const { Header, Content, Footer } = Layout;
 import logo from "../../assets/logo/logo.png";
-import "./FrontendLayout.css"; // Import the CSS file
+
 
 const items = [
   { key: "home", label: "Main Menu" },
@@ -34,7 +34,7 @@ const FrontendLayout = () => {
     <Layout>
       <Header style={{ display: "flex", alignItems: "center" }}>
         <div className="demo-log" />
-        <img src={logo} className="rounded-full mx-10" style={{ width: 60, height: 60 }} />
+        <img src={logo} className="rounded-full mx-10" style={{ width: 45, height: 45 }} />
         <Menu
           onSelect={handleOnChangeMenu}
           theme="dark"
