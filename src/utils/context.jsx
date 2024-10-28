@@ -5,9 +5,9 @@ const AppContext = createContext();
 
 const AppProvider = (props) => {
   const [user, setUser] = useState(null);
-
+  const [loading, setLoading] = useState(false);
   return (
-    <AppContext.Provider value={{ user, setUser }}>
+    <AppContext.Provider value={{ user, setUser, loading, setLoading }}>
       {props.children}
     </AppContext.Provider>
   );

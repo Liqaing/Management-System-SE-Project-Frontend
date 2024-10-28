@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Carousel } from "antd";
 import "./CarouselHome.css";
 import logo from "../../assets/logo/logo.png";
@@ -37,7 +37,7 @@ const CarouselHome = () => {
         <div key={index}>
           <h3 className="bg-slate-300 h-full p-10 rounded-sm text-center">
             <img src={item.image} width={120} />
-            <h1>{item.title}</h1>
+            <p>{item.title}</p>
           </h3>
         </div>
       ))}

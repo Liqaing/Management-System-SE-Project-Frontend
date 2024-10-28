@@ -1,8 +1,15 @@
 import { useContext, useEffect } from "react";
 import axios from "axios";
 import { AppContext } from "./utils/context";
-import { RouterProvider } from "react-router-dom";
-import router from "./utils/routeHandler/routes.jsx";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import FrontendLayout from "./component/layout/FrontendLayout.jsx";
+import HomePage from "./page/home/HomePage.jsx";
+import NotFoundPage from "./page/error/404.jsx";
+import DashboardLayout from "./component/layout/DashboardLayout.jsx";
+import HomePageDash from "./page-dash/home/HomePageDash.jsx";
+import LayoutAuth from "./component/layout/LayoutAuth.jsx";
+import LoginPage from "./page/auth/LoginPage.jsx";
+import SignupPage from "./page/auth/SignupPage.jsx";
 
 const App = () => {
   const { setUser } = useContext(AppContext);
@@ -22,7 +29,32 @@ const App = () => {
         setUser(null);
       });
   }, [setUser]);
-  return <RouterProvider router={router} />;
+  return (
+    <BrowserRouter>
+      <Routes>
+        {/* frontend route */}
+        <Route path="/" element={<FrontendLayout />}>
+          <Route path="" element={<HomePage />}></Route>
+          <Route path="home" element={<HomePage />}></Route>
+          <Route path="*" element={<NotFoundPage />}></Route>
+        </Route>
+
+        {/* backend route */}
+        <Route path="/dashboard" element={<DashboardLayout />}>
+          <Route path="" element={<HomePageDash />}></Route>
+          <Route path="home" element={<HomePageDash />}></Route>
+          <Route path="*" element={<NotFoundPage />}></Route>
+        </Route>
+
+        {/* Login Route */}
+        <Route path="/auth" element={<LayoutAuth />}>
+          <Route path="login" element={<LoginPage />}></Route>
+          <Route path="register" element={<SignupPage />}></Route>
+          <Route path="*" element={<NotFoundPage />}></Route>
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  );
 };
 
 export default App;

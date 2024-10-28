@@ -1,22 +1,14 @@
-import React, { useState } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import { useContext, useState } from "react";
+import { Link, Outlet, useNavigate } from "react-router-dom";
 import { Breadcrumb, Layout, Menu, theme } from "antd";
 const { Header, Content, Footer } = Layout;
 import logo from "../../assets/logo/logo.png";
-
-
-const items = [
-  { key: "home", label: "Main Menu" },
-  { key: "beverages", label: "Beverages" },
-  { key: "breakfast", label: "Breakfast" },
-  { key: "specials", label: "Specials" },
-  { key: "kids", label: "Kids Menu" },
-  { key: "deals", label: "Deals & Combos" },
-  { key: "desserts", label: "Desserts" },
-  { key: "dashboard/login", label: "Login" },
-];
+import Logout from "../../page/auth/Logout";
+import { AppContext } from "../../utils/context";
 
 const FrontendLayout = () => {
+  const { user } = useContext(AppContext);
+
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
@@ -25,27 +17,76 @@ const FrontendLayout = () => {
   const navigate = useNavigate();
 
   const handleOnChangeMenu = (item) => {
-    console.log(item.key);
     setSelectedKey(item.key); // Update the selected menu item
     navigate(item.key);
   };
+
+  const items = [
+    {
+      label: <Link to="home">Main Menu</Link>,
+      key: "Main Menu",
+    },
+    {
+      label: <Link to="beverages">Beverages</Link>,
+      key: "beverages",
+    },
+    {
+      label: <Link to="breakfast">Breakfast</Link>,
+      key: "breakfast",
+    },
+    {
+      label: <Link to="specials">Specials</Link>,
+      key: "specials",
+    },
+    {
+      label: <Link to="kids">Kids Menu</Link>,
+      key: "kids",
+    },
+    {
+      label: <Link to="deals">Deals & Combos</Link>,
+      key: "deals",
+    },
+    {
+      label: <Link to="desserts">Desserts</Link>,
+      key: "desserts",
+    },
+
+    {
+      label: <Link>Dashboard</Link>,
+      key: "dashboard",
+    },
+
+    ...(user?.isLogin
+      ? [{ label: <Logout />, key: "logout" }]
+      : [
+          {
+            label: <Link>Login</Link>,
+            key: "auth/login",
+          },
+          {
+            label: <Link>Signup</Link>,
+            key: "auth/signup",
+          },
+        ]),
+  ];
 
   return (
     <Layout>
       <Header style={{ display: "flex", alignItems: "center" }}>
         <div className="demo-log" />
-        <img src={logo} className="rounded-full mx-10" style={{ width: 45, height: 45 }} />
+        <img
+          src={logo}
+          className="rounded-full mx-10"
+          style={{ width: 45, height: 45 }}
+        />
         <Menu
           onSelect={handleOnChangeMenu}
           theme="dark"
           mode="horizontal"
           selectedKeys={[selectedKey]}
+          items={items}
           style={{ flex: 1, minWidth: 0 }}
-        >
-          {items.map((item) => (
-            <Menu.Item key={item.key}>{item.label}</Menu.Item>
-          ))}
-        </Menu>
+        />
       </Header>
       <Content style={{ padding: "0 48px" }}>
         <Breadcrumb style={{ margin: "16px 0" }} />
