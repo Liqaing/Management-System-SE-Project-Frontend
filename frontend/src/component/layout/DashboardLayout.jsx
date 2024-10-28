@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import logo from "../../assets/logo/logo.png";
 import { DownOutlined } from "@ant-design/icons";
 import {
@@ -21,6 +21,7 @@ import {
   theme,
 } from "antd";
 import { Outlet , useNavigate } from "react-router-dom";
+import { request } from "../../utils/request";
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -84,6 +85,15 @@ const DashboardLayout = () => {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
+  useEffect(() => {
+    checkUserLogin();
+  },[])
+
+  const checkUserLogin = () => {
+    request("auth/token","POST").then((res) => {
+      console.log(res);
+    })
+  }
 
   const itemsProfile = [
     {

@@ -6,8 +6,8 @@ import DashboardLayout from "./component/layout/DashboardLayout";
 import HomePageDash from "./page-dash/home/HomePageDash";
 import NotFoundPage from "./page/error/404";
 import LayoutAuth from "./component/layout/LayoutAuth";
-import LoginPage from "./auth/LoginPage";
-import RegisterPage from "./auth/RegisterPage";
+import SignInPage from "./auth/SignInPage";
+import SignUpPage from "./auth/SignUpPage";
 
 const App = () => {
   return (
@@ -29,8 +29,8 @@ const App = () => {
 
         {/* Login Route */}
         <Route path='/dashboard' element={<LayoutAuth />}>
-          <Route path='login' element={<LoginPage />}></Route>
-          <Route path='register' element={<RegisterPage />}></Route>
+          <Route path='sign-in' element={<SignInPage />}></Route>
+          <Route path='sign-up' element={<SignUpPage />}></Route>
           <Route path='*' element={<NotFoundPage />}></Route>
         </Route>
         
