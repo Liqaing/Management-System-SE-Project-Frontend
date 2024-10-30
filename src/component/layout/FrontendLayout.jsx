@@ -3,7 +3,7 @@ import { Link, Outlet, useNavigate } from "react-router-dom";
 import { Breadcrumb, Layout, Menu, theme } from "antd";
 const { Header, Content, Footer } = Layout;
 import logo from "../../assets/logo/logo.png";
-import Logout from "../../page/auth/Logout";
+import Logout from "../../page/auth/Signout";
 import { AppContext } from "../../utils/context";
 
 const FrontendLayout = () => {
@@ -57,11 +57,11 @@ const FrontendLayout = () => {
     },
 
     ...(user?.isLogin
-      ? [{ label: <Logout />, key: "logout" }]
+      ? [{ label: <Logout />, key: "Signout" }]
       : [
           {
-            label: <Link>Login</Link>,
-            key: "auth/login",
+            label: <Link>Signin</Link>,
+            key: "auth/signin",
           },
           {
             label: <Link>Signup</Link>,

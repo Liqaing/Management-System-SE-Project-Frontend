@@ -3,31 +3,35 @@ import { Button, Form, Input } from "antd";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { Link, Navigate } from "react-router-dom";
 import axios from "axios";
-import ErrorAlert from "../../component/ui/ErrorAlert";
-import { BsTelephone } from "react-icons/bs";
 import { AppContext } from "../../utils/context";
+import ErrorAlert from "../../component/ui/ErrorAlert";
 
-const SignupPage = () => {
-  const { user, loading, setLoading } = useContext(AppContext);
-  const [form] = Form.useForm();
+const SignInPage = () => {
+  const { setUser, loading, setLoading } = useContext(AppContext);
 
-  if (user) {
-    <Navigate to="/" replace />;
-  }
   const onFinish = async (values) => {
     setLoading(true);
     try {
-      await axios.post("/api/auth/signup", {
-        username: values.username,
+      const res = await axios.post("/api/auth/login", {
         telephone: values.telephone,
         password: values.password,
       });
-      return <Navigate to="auth/login" replace />;
+
+      const data = res.data;
+      const userData = {
+        isLogin: true,
+        username: data.data.username,
+        role: data.data.role,
+      };
+
+      setUser(userData);
+      setLoading(false);
+
+      return <Navigate to="/" replace />;
     } catch (err) {
-      console.log(err.response?.data?.error.message);
       await ErrorAlert(
-        "Signup Failed",
-        err.response?.data?.error.message || "An error occurred during signup."
+        "Login Failed",
+        err.response?.data?.error.message || "An error occurred during logout."
       );
     } finally {
       setLoading(false);
@@ -37,26 +41,14 @@ const SignupPage = () => {
   return (
     <div className="flex justify-center items-center h-screen bg-gray-100">
       <Form
-        name="register-form"
-        form={form}
+        name="login-form"
+        initialValues={{ remember: true }}
         onFinish={onFinish}
         className="w-full max-w-sm p-8 bg-white rounded-lg shadow-lg"
       >
         <h2 className="text-2xl font-semibold text-center mb-6 text-gray-800">
-          Sign Up
+          Sign In
         </h2>
-
-        <Form.Item
-          name="username"
-          rules={[{ required: true, message: "Please input your username!" }]}
-        >
-          <Input
-            placeholder="Username"
-            size="large"
-            className="mb-4"
-            prefix={<UserOutlined className="text-gray-500" />}
-          />
-        </Form.Item>
 
         <Form.Item
           name="telephone"
@@ -66,7 +58,7 @@ const SignupPage = () => {
             placeholder="Telephone"
             size="large"
             className="mb-4"
-            prefix={<BsTelephone className="text-gray-500" />}
+            prefix={<UserOutlined className="text-gray-500" />}
           />
         </Form.Item>
 
@@ -89,15 +81,15 @@ const SignupPage = () => {
             htmlType="submit"
             className="w-full bg-blue-500 hover:bg-blue-700"
           >
-            Sign Up
+            Sign In
           </Button>
         </Form.Item>
 
         <div className="text-center">
           <p>
-            Already have an account?{" "}
-            <Link to="/auth/signin" className="text-blue-500">
-              Sign In
+            Don&apost have an account?{" "}
+            <Link to="/auth/signup" className="text-blue-500">
+              Sign Up
             </Link>
           </p>
         </div>
@@ -106,4 +98,4 @@ const SignupPage = () => {
   );
 };
 
-export default SignupPage;
+export default SignInPage;

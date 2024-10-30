@@ -8,9 +8,8 @@ import NotFoundPage from "./page/error/404.jsx";
 import DashboardLayout from "./component/layout/DashboardLayout.jsx";
 import HomePageDash from "./page-dash/home/HomePageDash.jsx";
 import LayoutAuth from "./component/layout/LayoutAuth.jsx";
-import LoginPage from "./page/auth/LoginPage.jsx";
 import SignupPage from "./page/auth/SignupPage.jsx";
-
+import SignInPage from "./page/auth/SignInPage.jsx";
 const App = () => {
   const { setUser } = useContext(AppContext);
   useEffect(() => {
@@ -48,8 +47,8 @@ const App = () => {
 
         {/* Login Route */}
         <Route path="/auth" element={<LayoutAuth />}>
-          <Route path="login" element={<LoginPage />}></Route>
-          <Route path="register" element={<SignupPage />}></Route>
+          <Route path="signin" element={<SignInPage />}></Route>
+          <Route path="signup" element={<SignupPage />}></Route>
           <Route path="*" element={<NotFoundPage />}></Route>
         </Route>
       </Routes>
