@@ -18,11 +18,13 @@ const SignInPage = () => {
     setLoading(true);
     request("auth/login","POST",jsonPayload).then((res) => {
       setLoading(false);
+      console.log(res);
       if(res.data.success === true){
         storeUserProfileData(res.data);
         window.location.href = "/dashboard";
       }else{
-        message.error(res.data.error.message);
+        
+        message.error(res.response.data.error.message);
       }
     })
   };

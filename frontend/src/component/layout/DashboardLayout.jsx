@@ -87,7 +87,7 @@ const DashboardLayout = () => {
 
   useEffect(() => {
     checkUserLogin();
-  },[])
+  },[]);
 
   const checkUserLogin = () => {
     request("auth/token","POST").then((res) => {
