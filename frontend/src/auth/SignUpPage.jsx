@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'; // For navigation
 import { request } from '../utils/request';
 import { BsTelephone } from "react-icons/bs";
 
+
 const SignUpPage = () => {
   const [loading, setLoading] = useState();
 

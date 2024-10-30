@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom'; // Assuming you are using React Router for navigation
 import { request } from '../utils/request';
 import { storeUserProfileData } from '../utils/helper';
+import { Navigate } from "react-router-dom";
 
 const SignInPage = () => {
 
@@ -21,7 +22,10 @@ const SignInPage = () => {
       console.log(res);
       if(res.data.success === true){
         storeUserProfileData(res.data);
-        window.location.href = "/dashboard";
+        
+        <Navigate to="/dashboard" replace={true} />
+        
+        // window.location.href = "/dashboard";
       }else{
         
         message.error(res.response.data.error.message);

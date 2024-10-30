@@ -9,7 +9,7 @@ export const request = (url, method, param) => {
     return axios ({
         url: config.base_server + url,
         method: method,
-        data: param
+        data: param,
     }).then(res => {
         return res;
     }).catch(err => {
