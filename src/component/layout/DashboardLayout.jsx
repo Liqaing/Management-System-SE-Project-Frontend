@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useLocation } from "react-router-dom"; // Import useLocation
 import logo from "../../assets/logo/logo.png";
 import { DownOutlined } from "@ant-design/icons";
 import {
@@ -31,6 +32,7 @@ function getItem(label, key, icon, children) {
     label,
   };
 }
+
 const items = [
   getItem("Dashboar", "/dashboard", <PieChartOutlined />),
 
@@ -70,19 +72,19 @@ const items = [
   ]),
 ];
 
-const handleOnClickLogOut = () => {
-  window.location.href = "/dashboard/login";
-};
-
 const DashboardLayout = () => {
-
   const navigate = useNavigate();
+  const location = useLocation(); // Get the current location
 
   const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
+  const handleOnClickLogOut = () => {
+    window.location.href = "/dashboard/login";
+  };
+  
   const itemsProfile = [
     {
       key: "1",
@@ -115,21 +117,22 @@ const DashboardLayout = () => {
   ];
 
   const handleChangeMenu = (item) => {
-    console.log(item);
     navigate(item.key);
-  }
+  };
+
+  // Dynamic Breadcrumb Items
+  const breadcrumbItems = location.pathname.split("/").filter(Boolean).map((segment, index, array) => {
+    const path = `/${array.slice(0, index + 1).join("/")}`;
+    return (
+      <Breadcrumb.Item key={path} onClick={() => navigate(path)}>
+        {segment.charAt(0).toUpperCase() + segment.slice(1)} {/* Capitalize first letter */}
+      </Breadcrumb.Item>
+    );
+  });
 
   return (
-    <Layout
-      style={{
-        minHeight: "100vh",
-      }}
-    >
-      <Sider
-        collapsible
-        collapsed={collapsed}
-        onCollapse={(value) => setCollapsed(value)}
-      >
+    <Layout style={{ minHeight: "100vh" }}>
+      <Sider collapsible collapsed={collapsed} onCollapse={setCollapsed}>
         <div className="demo-logo-vertical" />
         <Menu
           onSelect={handleChangeMenu}
@@ -149,13 +152,8 @@ const DashboardLayout = () => {
           }}
         >
           <div className="flex">
-            <img
-              src={logo}
-              className="rounded-full mt-2"
-              style={{ width: 45, height: 45 }}
-            />
-             <div className="font-bold ml-2 text-lg mt-4 text-gray-600">KHMER FOOD</div>
-            
+            <img src={logo} className="rounded-full mt-2" style={{ width: 45, height: 45 }} />
+            <div className="font-bold ml-2 text-lg mt-4 text-gray-600">KHMER FOOD</div>
           </div>
           <div>
             <Space size="large">
@@ -163,7 +161,6 @@ const DashboardLayout = () => {
               <Badge count={5}>
                 <Avatar shape="square" size="small" />
               </Badge>
-
               <Dropdown
                 menu={{
                   items: itemsProfile,
@@ -180,18 +177,9 @@ const DashboardLayout = () => {
           </div>
         </Header>
 
-        <Content
-          style={{
-            margin: "0 16px",
-          }}
-        >
-          <Breadcrumb
-            style={{
-              margin: "16px 0",
-            }}
-          >
-            <Breadcrumb.Item>Dashboar</Breadcrumb.Item>
-            <Breadcrumb.Item>Home</Breadcrumb.Item>
+        <Content style={{ margin: "0 16px" }}>
+          <Breadcrumb style={{ margin: "16px 0" }}>
+            {breadcrumbItems} {/* Render dynamic breadcrumb items */}
           </Breadcrumb>
           <div
             style={{
@@ -201,19 +189,16 @@ const DashboardLayout = () => {
               borderRadius: borderRadiusLG,
             }}
           >
-            {/* content */}
             <Outlet />
           </div>
         </Content>
-        <Footer
-          style={{
-            textAlign: "center",
-          }}
-        >
-          RUPP ©{new Date().getFullYear()} Created by Group3
+
+        <Footer style={{ textAlign: "center" }}>
+          RUPP ©{new Date().getFullYear()} Created by Group
         </Footer>
       </Layout>
     </Layout>
   );
 };
+
 export default DashboardLayout;

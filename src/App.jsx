@@ -5,13 +5,14 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import FrontendLayout from "./component/layout/FrontendLayout.jsx";
 import HomePage from "./page/home/HomePage.jsx";
 import NotFoundPage from "./page/error/404.jsx";
-import DashboardLayout from "./component/layout/DashboardLayout.jsx";
+
 import HomePageDash from "./page-dash/home/HomePageDash.jsx";
 import LayoutAuth from "./component/layout/LayoutAuth.jsx";
 import SignupPage from "./page/auth/SignupPage.jsx";
 import SignInPage from "./page/auth/SignInPage.jsx";
 import CategoryPageDash from "./page-dash/product/CategoryPageDash.jsx";
 import ProductPageDash from "./page-dash/product/ProductPageDash.jsx";
+import DashboardLayout from "./component/layout/DashboardLayout.jsx";
 const App = () => {
   const { setUser } = useContext(AppContext);
   useEffect(() => {
