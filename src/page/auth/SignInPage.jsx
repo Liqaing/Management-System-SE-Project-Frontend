@@ -10,6 +10,7 @@ const SignInPage = () => {
   const { setUser, loading, setLoading } = useContext(AppContext);
 
   const onFinish = async (values) => {
+    
     setLoading(true);
     try {
       const res = await axios.post("/api/auth/login", {
@@ -18,6 +19,7 @@ const SignInPage = () => {
       });
 
       const data = res.data;
+
       const userData = {
         isLogin: true,
         username: data.data.username,

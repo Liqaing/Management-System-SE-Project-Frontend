@@ -75,7 +75,9 @@ const handleOnClickLogOut = () => {
 };
 
 const DashboardLayout = () => {
+
   const navigate = useNavigate();
+
   const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer, borderRadiusLG },
@@ -112,6 +114,11 @@ const DashboardLayout = () => {
     },
   ];
 
+  const handleChangeMenu = (item) => {
+    console.log(item);
+    navigate(item.key);
+  }
+
   return (
     <Layout
       style={{
@@ -125,6 +132,7 @@ const DashboardLayout = () => {
       >
         <div className="demo-logo-vertical" />
         <Menu
+          onSelect={handleChangeMenu}
           theme="dark"
           defaultSelectedKeys={["1"]}
           mode="inline"

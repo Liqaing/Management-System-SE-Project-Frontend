@@ -10,6 +10,8 @@ import HomePageDash from "./page-dash/home/HomePageDash.jsx";
 import LayoutAuth from "./component/layout/LayoutAuth.jsx";
 import SignupPage from "./page/auth/SignupPage.jsx";
 import SignInPage from "./page/auth/SignInPage.jsx";
+import CategoryPageDash from "./page-dash/product/CategoryPageDash.jsx";
+import ProductPageDash from "./page-dash/product/ProductPageDash.jsx";
 const App = () => {
   const { setUser } = useContext(AppContext);
   useEffect(() => {
@@ -42,6 +44,8 @@ const App = () => {
         <Route path="/dashboard" element={<DashboardLayout />}>
           <Route path="" element={<HomePageDash />}></Route>
           <Route path="home" element={<HomePageDash />}></Route>
+          <Route path="product/category" element={<CategoryPageDash />}></Route>
+          <Route path="product/productList" element={<ProductPageDash />}></Route>
           <Route path="*" element={<NotFoundPage />}></Route>
         </Route>
 
