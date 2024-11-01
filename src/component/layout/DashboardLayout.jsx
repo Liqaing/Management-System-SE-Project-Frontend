@@ -148,12 +148,14 @@ const DashboardLayout = () => {
             justifyContent: "space-between",
           }}
         >
-          <div className="">
+          <div className="flex">
             <img
               src={logo}
-              className="rounded-full"
-              style={{ width: 60, height: 60 }}
+              className="rounded-full mt-2"
+              style={{ width: 45, height: 45 }}
             />
+             <div className="font-bold ml-2 text-lg mt-4 text-gray-600">KHMER FOOD</div>
+            
           </div>
           <div>
             <Space size="large">
@@ -208,7 +210,7 @@ const DashboardLayout = () => {
             textAlign: "center",
           }}
         >
-          Ant Design ©{new Date().getFullYear()} Created by Ant UED
+          RUPP ©{new Date().getFullYear()} Created by Group3
         </Footer>
       </Layout>
     </Layout>
