@@ -8,6 +8,9 @@ const CategoryPageDash = () => {
   const [loading, setLoading] = useState(false);
   const [categoryList, setCategoryList] = useState([]);
 
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+
   //use form
   const [form] = Form.useForm();
 
@@ -20,10 +23,7 @@ const CategoryPageDash = () => {
     try {
       const res = await request("/api/category", "GET", {});
       console.log(res);
-
-      // Convert the response data object into an array
-      const categoriesArray = Object.values(res.data);
-      setCategoryList(categoriesArray);
+      setCategoryList(res.data.value);
     } catch (error) {
       console.error("An error occurred:", error);
     } finally {
@@ -53,8 +53,8 @@ const CategoryPageDash = () => {
     {
       title: "Create At",
       key: "create_at",
-      render: (text, record) => {
-        return formatDateClient(record.create_at);
+      render: (text, record, index) => {
+        return formatDateClient(text);
       },
     },
   ];
@@ -71,9 +71,14 @@ const CategoryPageDash = () => {
     setIsModalOpen(false);
   };
 
-  const onFinish = (values) => {
-    console.log(values);
-    // Handle the submit logic, e.g., send values to the server
+  const onFinish = async (items) => {
+    console.log(items);
+    const payload = {
+      categoryName: items.name,
+      description: items.description
+    }
+    const res = await request("/api/category","POST",payload);
+    console.log(res);
   };
 
   return (
@@ -107,11 +112,11 @@ const CategoryPageDash = () => {
         <Form layout="vertical" form={form} onFinish={onFinish}>
           <Form.Item
             label="Name"
-            name="categoryName"
+            name="name"
             rules={[{ required: true, message: "Please input category name" }]}
             className="mb-3"
           >
-            <Input placeholder="Name" />
+            <Input placeholder="Name" allowClear={true} />
           </Form.Item>
           <Form.Item
             label="Description"
@@ -119,7 +124,7 @@ const CategoryPageDash = () => {
             rules={[{ required: true, message: "Please input description" }]}
             className="mb-3"
           >
-            <Input placeholder="Description" />
+            <Input placeholder="Description" allowClear={true} />
           </Form.Item>
 
           <Form.Item className="mt-5">

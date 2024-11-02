@@ -23,6 +23,6 @@ export const request = async (url, method, param) => {
     } else {
       message.error(err.message);
     }
-    return false;
+    return err;
   }
 };
