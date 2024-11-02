@@ -194,7 +194,7 @@ const DashboardLayout = () => {
         </Content>
 
         <Footer style={{ textAlign: "center" }}>
-          RUPP ©{new Date().getFullYear()} Created by Group
+          RUPP ©{new Date().getFullYear()} Created by Group3
         </Footer>
       </Layout>
     </Layout>
