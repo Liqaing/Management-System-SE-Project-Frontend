@@ -22,11 +22,12 @@ import { QuestionCircleOutlined, UploadOutlined } from "@ant-design/icons";
 import axios from "axios";
 
 const ProductPageDash = () => {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [productList, setProductList] = useState([]);
-  const [productId, setProductId] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [categoryList, setCategoryList] = useState([]);
+  const [productIdEdit, setProductIdEdit] = useState(null);
+
 
   const [productName, setProductName] = useState("");
   const [description, setDescription] = useState("");
@@ -39,6 +40,7 @@ const ProductPageDash = () => {
 
   useEffect(() => {
     getList();
+    getCategoryList();
   }, []);
 
   const getList = async () => {
@@ -59,7 +61,7 @@ const ProductPageDash = () => {
   };
 
   const getCategoryList = async () => {
-    setLoading(true); // Start loading
+    setLoading(true);
     try {
       const res = await request("/api/category", "GET", {});
       console.log(res);
@@ -67,12 +69,11 @@ const ProductPageDash = () => {
     } catch (error) {
       console.error("An error occurred:", error);
     } finally {
-      setLoading(false); // Set loading to false after response
+      setLoading(false);
     }
   };
 
   const showModal = () => {
-    getCategoryList();
     setIsModalOpen(true);
   };
 
@@ -80,6 +81,8 @@ const ProductPageDash = () => {
 
   const handleCancel = () => {
     setIsModalOpen(false);
+    setProductIdEdit(null);
+    form.resetFields();
   };
 
   const onFinish = (values) => {
@@ -93,11 +96,13 @@ const ProductPageDash = () => {
     // Check if values.images is an array before iterating
     if (Array.isArray(values.images)) {
       values.images.forEach((file, index) => {
-          formData.append(`userImage${index}`, file.originFileObj);
+        formData.append(`userImage${index}`, file.originFileObj);
       });
-  } else if (values.images) {
+    } else if (values.images) {
       formData.append(`userImage`, values.images.originFileObj);
-  }
+    }
+
+    setLoading(true);
     axios
       .post("/api/product", formData, {
         headers: {
@@ -105,22 +110,56 @@ const ProductPageDash = () => {
         },
       })
       .then((res) => {
+        setLoading(false);
         console.log("Response:", res.data);
         setIsModalOpen(false);
-        if(res.data.success == true){
+        if (res.data.success == true) {
           message.success(res.data.data?.message);
-        }else{
+          getList();
+        } else {
           message.success(res.data.data?.message);
         }
       })
-      .catch((error) => {
-        console.error("Error:", error);
-        // message.success(res.data.data?.message);
+      .catch((err) => {
+        setLoading(false);
+        console.error("Error:", err);
+        message.error(err?.response?.data?.error?.message);
       });
   };
 
   const cancel = (e) => {
     console.log(e);
+  };
+
+  const handleDelete = async (record) => {
+    setLoading(true);
+    try {
+      const res = await request(`/api/product/${record.id}`, "DELETE", {});
+      console.log(res);
+      if (res.success === true) {
+        message.success(res.data.message);
+        getList();
+      } else {
+        message.success(res.data.message);
+      }
+    } catch (error) {
+      console.error("An error occurred:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleEdit = (values) => {
+    console.log(values);
+    setIsModalOpen(true);
+    setProductIdEdit(values.id);
+    
+    form.setFieldsValue({
+      productName: values.productName,
+      price: values.price,
+      description: values.description,
+      category: values.category.categoryName,
+    });
   };
 
   const columns = [
@@ -177,7 +216,7 @@ const ProductPageDash = () => {
     {
       title: "Action",
       key: "action",
-      render: (text, record) => {
+      render: (text, record,index) => {
         return (
           <div>
             <Space>
@@ -259,7 +298,7 @@ const ProductPageDash = () => {
       {/* Start Modal Form Insert */}
 
       <Modal
-        title="Add Product"
+        title= {productIdEdit == null ? "Add Product" : "Edit Product"}
         open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}
@@ -304,14 +343,16 @@ const ProductPageDash = () => {
                   },
                 ]}
               >
-                <Select placeholder="Select a category" allowClear={true}>
-                  {categoryList.map((item, index) => {
-                    return (
-                      <Select.Option key={index} value={item.id}>
-                        {item.id}-{item.categoryName}
-                      </Select.Option>
-                    );
-                  })}
+                <Select
+                  showSearch
+                  placeholder="Select a category"
+                  allowClear
+                >
+                  {categoryList?.map((item, index) => (
+                    <Select.Option key={index} value={item.categoryId}>
+                      {item.categoryName}
+                    </Select.Option>
+                  ))}
                 </Select>
               </Form.Item>
             </Col>
@@ -360,7 +401,7 @@ const ProductPageDash = () => {
                 Clear
               </Button>
               <Button type="primary" htmlType="submit">
-                Save
+                {productIdEdit == null ? "Save" : "Edit"}
               </Button>
             </Space>
           </Form.Item>
