@@ -20,6 +20,7 @@ const App = () => {
       .post("/api/auth/token")
       .then((res) => {
         const data = res.data;
+        console.log(data);
         const userData = {
           isLogin: data.data.isLogin,
           username: data.data.username,

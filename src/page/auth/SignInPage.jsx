@@ -5,6 +5,7 @@ import { Link, Navigate } from "react-router-dom";
 import axios from "axios";
 import { AppContext } from "../../utils/context";
 import ErrorAlert from "../../component/ui/ErrorAlert";
+import { storeUserProfileData } from "../../utils/helper";
 
 const SignInPage = () => {
   const { setUser, loading, setLoading } = useContext(AppContext);
@@ -19,6 +20,9 @@ const SignInPage = () => {
       });
 
       const data = res.data;
+      console.log('login data: '+JSON.stringify(data));
+      console.log('login: '+JSON.parse(data));
+      storeUserProfileData(data);
 
       const userData = {
         isLogin: true,

@@ -103,7 +103,7 @@ const FrontendLayout = () => {
         </div>
       </Content>
       <Footer style={{ textAlign: "center" }}>
-        Developed by Rupp ©{new Date().getFullYear()}
+      ©RUPP - {new Date().getFullYear()}
       </Footer>
     </Layout>
   );

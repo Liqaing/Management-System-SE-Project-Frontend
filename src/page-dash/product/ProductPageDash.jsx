@@ -27,7 +27,8 @@ const ProductPageDash = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [categoryList, setCategoryList] = useState([]);
   const [productIdEdit, setProductIdEdit] = useState(null);
-
+  const [txtSearch, setTxtSearch] = useState("");
+  const [categorySearch, setCategorySearch] = useState(null);
 
   const [productName, setProductName] = useState("");
   const [description, setDescription] = useState("");
@@ -95,7 +96,7 @@ const ProductPageDash = () => {
 
     // Check if values.images is an array before iterating
     if (Array.isArray(values.images)) {
-      values.images.forEach((file, index) => {
+        values.images.forEach((file, index) => {
         formData.append(`userImage${index}`, file.originFileObj);
       });
     } else if (values.images) {
@@ -153,7 +154,7 @@ const ProductPageDash = () => {
     console.log(values);
     setIsModalOpen(true);
     setProductIdEdit(values.id);
-    
+
     form.setFieldsValue({
       productName: values.productName,
       price: values.price,
@@ -216,7 +217,7 @@ const ProductPageDash = () => {
     {
       title: "Action",
       key: "action",
-      render: (text, record,index) => {
+      render: (text, record, index) => {
         return (
           <div>
             <Space>
@@ -284,10 +285,38 @@ const ProductPageDash = () => {
           <div className="text-lg text-gray-700">Product</div>
           <div className="text-gray-400">{productList.length} items</div>
         </div>
+       
+
         <Button size="middle" type="primary" onClick={showModal}>
           Add Product
         </Button>
       </div>
+
+      <div className="flex justify-center mb-5">
+          <Space>
+            <Input.Search
+              value={txtSearch}
+              placeholder="Product Name"
+              allowClear={true}
+            />
+            <Select
+              value={categorySearch}
+              placeholder="Select a category"
+              className="w-[250px]"
+            >
+              {categoryList.map((item, index) => {
+                return (
+                  <Select.Option key={index} value={item.id} allowClear={true}>
+                    {item.categoryName}
+                  </Select.Option>
+                );
+              })}
+            </Select>
+            <Button type="primary">Filter</Button>
+            <Button danger>Clear</Button>
+          </Space>
+        </div>
+
       <Table
         className="mt-2"
         dataSource={productList}
@@ -298,7 +327,7 @@ const ProductPageDash = () => {
       {/* Start Modal Form Insert */}
 
       <Modal
-        title= {productIdEdit == null ? "Add Product" : "Edit Product"}
+        title={productIdEdit == null ? "Add Product" : "Edit Product"}
         open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}
@@ -343,11 +372,7 @@ const ProductPageDash = () => {
                   },
                 ]}
               >
-                <Select
-                  showSearch
-                  placeholder="Select a category"
-                  allowClear
-                >
+                <Select showSearch placeholder="Select a category" allowClear>
                   {categoryList?.map((item, index) => (
                     <Select.Option key={index} value={item.categoryId}>
                       {item.categoryName}

@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom"; // Import useLocation
 import logo from "../../assets/logo/logo.png";
+import userPic from "../../assets/logo/user.png";
 import { DownOutlined } from "@ant-design/icons";
 import {
   DesktopOutlined,
@@ -21,7 +22,9 @@ import {
   theme,
 } from "antd";
 import { Outlet, useNavigate } from "react-router-dom";
-
+import { request } from "../../utils/request";
+import { getUser } from "../../utils/helper";
+import { AppContext } from "../../utils/context";
 const { Header, Content, Footer, Sider } = Layout;
 
 function getItem(label, key, icon, children) {
@@ -36,10 +39,9 @@ function getItem(label, key, icon, children) {
 const items = [
   getItem("Dashboar", "/dashboard", <PieChartOutlined />),
 
-  getItem("Customer", "/dashboard/customer", <DesktopOutlined />),
-  getItem("Order", "/dashboard/order", <DesktopOutlined />),
   getItem("POS", "/dashboard/pos", <DesktopOutlined />),
-
+  getItem("Order", "/dashboard/order", <DesktopOutlined />),
+  
   getItem("Product", "/dashboard/product", <UserOutlined />, [
     getItem("Category", "/dashboard/product/category", <DesktopOutlined />),
     getItem("Product", "/dashboard/product/productList", <DesktopOutlined />),
@@ -47,8 +49,7 @@ const items = [
 
   getItem("User", "/dashboard/user", <UserOutlined />, [
     getItem("Employee", "/dashboard/user/employee"),
-    getItem("Role", "/dashboard/user/role"),
-    getItem("User Role", "/dashboard/user/userRole"),
+    getItem("Customer", "/dashboard/user/Customer"),
   ]),
 
   getItem("System", "/dashboard/system", <UserOutlined />, [
@@ -73,6 +74,7 @@ const items = [
 ];
 
 const DashboardLayout = () => {
+  const { user } = useContext(AppContext);
   const navigate = useNavigate();
   const location = useLocation(); // Get the current location
 
@@ -81,9 +83,23 @@ const DashboardLayout = () => {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
-  const handleOnClickLogOut = () => {
-    window.location.href = "/dashboard/login";
+  useEffect(() => {
+    console.log('user: '+user);
+    if(user == null){
+      navigate('/');
+    }
+  },[]);
+  const handleOnClickLogOut = async () => {
+    try{
+      const res = await request("/api/auth/logout","POST",{});
+      console.log(res);
+    }catch(err){
+      console.log(err);
+    }finally{
+
+    }
   };
+  
   
   const itemsProfile = [
     {
@@ -130,6 +146,10 @@ const DashboardLayout = () => {
     );
   });
 
+
+  var userLogin = getUser();
+  console.log("userLogin: " + JSON.stringify(userLogin));
+
   return (
     <Layout style={{ minHeight: "100vh" }}>
       <Sider collapsible collapsed={collapsed} onCollapse={setCollapsed}>
@@ -157,18 +177,16 @@ const DashboardLayout = () => {
           </div>
           <div>
             <Space size="large">
-              <Input.Search className="mt-5" />
-              <Badge count={5}>
-                <Avatar shape="square" size="small" />
-              </Badge>
+              
               <Dropdown
+                className="bg-blue-100 p-2 rounded-lg"
                 menu={{
                   items: itemsProfile,
                 }}
               >
                 <a onClick={(e) => e.preventDefault()}>
                   <Space>
-                    <div className="">Mr.Darith</div>
+                    <div className=""><img src={userPic} className="w-[20px] h-[20px]" />{user.username}</div>
                     <DownOutlined />
                   </Space>
                 </a>
@@ -194,7 +212,7 @@ const DashboardLayout = () => {
         </Content>
 
         <Footer style={{ textAlign: "center" }}>
-          RUPP ©{new Date().getFullYear()} Created by Group3
+          ©RUPP - {new Date().getFullYear()}
         </Footer>
       </Layout>
     </Layout>

@@ -17,3 +17,21 @@ export const formatDateServer = (date) =>{
 export const isEmptyOrNull = (value) => {
     return (value == "" || value ==null || value == undefined) ? true : false
 }
+
+export const storeUserProfileData = (res) =>{
+    localStorage.setItem('username',res.username);
+    localStorage.setItem('role',res.role);
+    localStorage.setItem('userImage',res.userImage);
+    localStorage.setItem('user',JSON.stringify(res.data));
+}
+
+export const getUser = () => {
+    var user = localStorage.getItem("user");
+    if(!isEmptyOrNull(user)){
+        user = JSON.parse(user);
+        return user;
+    }else{
+        //can logout
+        return {};
+    }
+}
