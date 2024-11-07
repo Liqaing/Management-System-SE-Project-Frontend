@@ -20,9 +20,6 @@ const SignInPage = () => {
       });
 
       const data = res.data;
-      console.log('login data: '+JSON.stringify(data));
-      console.log('login: '+JSON.parse(data));
-      storeUserProfileData(data);
 
       const userData = {
         isLogin: true,
@@ -34,7 +31,9 @@ const SignInPage = () => {
       setLoading(false);
 
       return <Navigate to="/" replace />;
+
     } catch (err) {
+      console.log(err)
       await ErrorAlert(
         "Login Failed",
         err.response?.data?.error.message || "An error occurred during logout."

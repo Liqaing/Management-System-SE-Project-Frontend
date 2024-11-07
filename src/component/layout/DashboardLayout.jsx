@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom"; // Import useLocation
 import logo from "../../assets/logo/logo.png";
 import userPic from "../../assets/logo/user.png";
+import { FaExchangeAlt, FaUserAlt } from "react-icons/fa";
 import { DownOutlined } from "@ant-design/icons";
 import {
   DesktopOutlined,
@@ -21,10 +22,13 @@ import {
   Space,
   theme,
 } from "antd";
+import { FiLogOut } from "react-icons/fi";
 import { Outlet, useNavigate } from "react-router-dom";
 import { request } from "../../utils/request";
 import { getUser } from "../../utils/helper";
 import { AppContext } from "../../utils/context";
+import { MdManageAccounts } from "react-icons/md";
+import axios from "axios";
 const { Header, Content, Footer, Sider } = Layout;
 
 function getItem(label, key, icon, children) {
@@ -41,7 +45,7 @@ const items = [
 
   getItem("POS", "/dashboard/pos", <DesktopOutlined />),
   getItem("Order", "/dashboard/order", <DesktopOutlined />),
-  
+
   getItem("Product", "/dashboard/product", <UserOutlined />, [
     getItem("Category", "/dashboard/product/category", <DesktopOutlined />),
     getItem("Product", "/dashboard/product/productList", <DesktopOutlined />),
@@ -49,7 +53,7 @@ const items = [
 
   getItem("User", "/dashboard/user", <UserOutlined />, [
     getItem("Employee", "/dashboard/user/employee"),
-    getItem("Customer", "/dashboard/user/Customer"),
+    getItem("Customer", "/dashboard/user/customer"),
   ]),
 
   getItem("System", "/dashboard/system", <UserOutlined />, [
@@ -75,6 +79,7 @@ const items = [
 
 const DashboardLayout = () => {
   const { user } = useContext(AppContext);
+
   const navigate = useNavigate();
   const location = useLocation(); // Get the current location
 
@@ -84,51 +89,66 @@ const DashboardLayout = () => {
   } = theme.useToken();
 
   useEffect(() => {
-    console.log('user: '+user);
-    if(user == null){
-      navigate('/');
+    if (user == null) {
+      navigate("/");
     }
-  },[]);
-  const handleOnClickLogOut = async () => {
-    try{
-      const res = await request("/api/auth/logout","POST",{});
-      console.log(res);
-    }catch(err){
-      console.log(err);
-    }finally{
+  }, []);
 
-    }
+  const handleLogout = async () => {
+    axios
+      .post("/api/auth/logout")
+      .then(() => {
+        navigate("/");
+        setUser(null);
+      })
+      .catch(async (err) => {
+        await ErrorAlert(
+          "Logout Failed",
+          err.response?.data?.error.message || "An error occurred during login."
+        );
+      });
   };
-  
-  
+
   const itemsProfile = [
     {
       key: "1",
       label: (
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://www.antgroup.com"
-        >
-          My Account
-        </a>
+        <>
+          <MdManageAccounts className="size-5 mr-1" />
+          <a
+            target="_blank"
+            rel="noopener noreferrer"
+            href="https://www.antgroup.com"
+          >
+            My Account
+          </a>
+        </>
       ),
     },
     {
       key: "2",
       label: (
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://www.aliyun.com"
-        >
-          Change Password
-        </a>
+        <>
+          <FaExchangeAlt className="size-4 mr-1" />
+          <a
+            target="_blank"
+            rel="noopener noreferrer"
+            href="https://www.aliyun.com"
+          >
+             Change Password
+          </a>
+        </>
       ),
     },
     {
       key: "3",
-      label: <a onClick={handleOnClickLogOut}>Logout</a>,
+      label:(
+        <>
+        <FiLogOut  className="size-4 mr-1 color-re" />
+
+         <a onClick={handleLogout}> Logout</a>
+        </>
+      )
     },
   ];
 
@@ -137,18 +157,18 @@ const DashboardLayout = () => {
   };
 
   // Dynamic Breadcrumb Items
-  const breadcrumbItems = location.pathname.split("/").filter(Boolean).map((segment, index, array) => {
-    const path = `/${array.slice(0, index + 1).join("/")}`;
-    return (
-      <Breadcrumb.Item key={path} onClick={() => navigate(path)}>
-        {segment.charAt(0).toUpperCase() + segment.slice(1)} {/* Capitalize first letter */}
-      </Breadcrumb.Item>
-    );
-  });
-
-
-  var userLogin = getUser();
-  console.log("userLogin: " + JSON.stringify(userLogin));
+  const breadcrumbItems = location.pathname
+    .split("/")
+    .filter(Boolean)
+    .map((segment, index, array) => {
+      const path = `/${array.slice(0, index + 1).join("/")}`;
+      return (
+        <Breadcrumb.Item key={path} onClick={() => navigate(path)}>
+          {segment.charAt(0).toUpperCase() + segment.slice(1)}{" "}
+          {/* Capitalize first letter */}
+        </Breadcrumb.Item>
+      );
+    });
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
@@ -172,22 +192,28 @@ const DashboardLayout = () => {
           }}
         >
           <div className="flex">
-            <img src={logo} className="rounded-full mt-2" style={{ width: 45, height: 45 }} />
-            <div className="font-bold ml-2 text-lg mt-4 text-gray-600">KHMER FOOD</div>
+            <img
+              src={logo}
+              className="rounded-full mt-2"
+              style={{ width: 45, height: 45 }}
+            />
+            <div className="font-bold ml-2 text-lg mt-4 text-gray-600">
+              RESTAURANT
+            </div>
           </div>
           <div>
-            <Space size="large">
-              
+            <Space size="large" className="mt-2">
+
               <Dropdown
-                className="bg-blue-100 p-2 rounded-lg"
                 menu={{
                   items: itemsProfile,
                 }}
               >
                 <a onClick={(e) => e.preventDefault()}>
-                  <Space>
-                    <div className=""><img src={userPic} className="w-[20px] h-[20px]" />{user.username}</div>
-                    <DownOutlined />
+                  <Space className="bg-blue-100 rounded-lg h-[40px] p-3">
+                    <img src={userPic} className="w-[30px]" />
+                    <span className="font-semibold">{user?.username}</span>
+                    {/* <DownOutlined /> */}
                   </Space>
                 </a>
               </Dropdown>
