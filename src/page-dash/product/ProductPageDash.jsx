@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { request } from "../../utils/request";
 import MainPageDash from "../mainpage/MainPageDash";
 import {
@@ -20,6 +20,7 @@ import { LiaEdit } from "react-icons/lia";
 import { MdOutlineDelete } from "react-icons/md";
 import { QuestionCircleOutlined, UploadOutlined } from "@ant-design/icons";
 import axios from "axios";
+import { AppContext } from "../../utils/context";
 
 const ProductPageDash = () => {
   const [loading, setLoading] = useState(true);
@@ -35,6 +36,8 @@ const ProductPageDash = () => {
   const [price, setPrice] = useState("");
   const [categoryId, setCategoryId] = useState("");
   const [userImages, setUserImages] = useState([]);
+
+  const { user } = useContext(AppContext);
 
   //use form
   const [form] = Form.useForm();
@@ -94,9 +97,12 @@ const ProductPageDash = () => {
     formData.append("price", values.price);
     formData.append("categoryId", values.category);
 
-    if (Array.isArray(values.images.fileList)) {
-      values.images.fileList.forEach((file) => {
-        formData.append("productImages", file.originFileObj);
+    console.log("images: " + JSON.stringify(values.images.fileList));
+
+    // Check if values.images is an array before iterating
+    if (Array.isArray(values.images)) {
+        values.images.forEach((file, index) => {
+        formData.append(`userImage${index}`, file.originFileObj);
       });
     }
 
@@ -253,27 +259,26 @@ const ProductPageDash = () => {
   const allowedFileTypes = ["image/png", "image/jpeg"];
   const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 
-  const handleImageChange = ({ fileList }) => {
-    console.log("File", fileList);
-    // if (info.file.status === "done") {
-    //   message.success(`${info.file.name} file uploaded successfully`);
-    // }
+  const handleImageChange = (info) => {
+    if (info.file.status === "done") {
+      message.success(`${info.file.name} file uploaded successfully`);
+    }
 
-    // const isLtSize = info.file.size / 1024 / 1024 < MAX_FILE_SIZE;
+    const isLtSize = info.file.size / 1024 / 1024 < MAX_FILE_SIZE;
 
-    // if (!isLtSize) {
-    //   message.error("Image must be smaller than 10MB!");
-    //   return false;
-    // }
+    if (!isLtSize) {
+      message.error("Image must be smaller than 10MB!");
+      return false;
+    }
 
-    // const isImage = allowedFileTypes.includes(info.file.type);
+    const isImage = allowedFileTypes.includes(info.file.type);
 
-    // if (!isImage) {
-    //   message.error("You can only upload PNG or JPEG file!");
-    //   return false;
-    // }
+    if (!isImage) {
+      message.error("You can only upload PNG or JPEG file!");
+      return false;
+    }
 
-    setUserImages(fileList);
+    setUserImages(info.fileList);
   };
 
   return (

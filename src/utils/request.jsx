@@ -24,7 +24,9 @@ export const request = async (url, method, param) => {
         err.response?.data?.error?.message || "Unauthorized!";
       message.error(errorMessage);
     } else if (status === 500) {
-      message.error("Internal Server Error!");
+      const errorMessage =
+        err.response?.data?.error?.message || "Internal Server Error!!";
+      message.error(errorMessage);
     } else {
       const errorMessage =
         err.response?.data?.error?.message ||

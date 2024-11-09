@@ -1,28 +1,33 @@
 import { useContext } from "react";
 import { Button, Form, Input } from "antd";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
-import { Link, Navigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import axios from "axios";
 import ErrorAlert from "../../component/ui/ErrorAlert";
 import { BsTelephone } from "react-icons/bs";
 import { AppContext } from "../../utils/context";
+import { request } from "../../utils/request";
 
 const SignupPage = () => {
   const { user, loading, setLoading } = useContext(AppContext);
   const [form] = Form.useForm();
-
+  const navigate = useNavigate();
   if (user) {
     <Navigate to="/" replace />;
   }
   const onFinish = async (values) => {
     setLoading(true);
-    try {
-      await axios.post("/api/auth/signup", {
+    var param = {
         username: values.username,
         telephone: values.telephone,
-        password: values.password,
-      });
-      return <Navigate to="auth/login" replace />;
+        password: values.password
+    }
+    try {
+      var res = await request("/api/auth/signup","POST",param);
+      console.log(res);
+      if(res.success==true){
+        navigate("/auth/signin");
+      }
     } catch (err) {
       console.log(err.response?.data?.error.message);
       await ErrorAlert(
