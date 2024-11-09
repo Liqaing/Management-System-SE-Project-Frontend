@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { request } from "../../utils/request";
 import MainPageDash from "../mainpage/MainPageDash";
 import {
@@ -94,13 +94,10 @@ const ProductPageDash = () => {
     formData.append("price", values.price);
     formData.append("categoryId", values.category);
 
-    // Check if values.images is an array before iterating
-    if (Array.isArray(values.images)) {
-        values.images.forEach((file, index) => {
-        formData.append(`userImage${index}`, file.originFileObj);
+    if (Array.isArray(values.images.fileList)) {
+      values.images.fileList.forEach((file) => {
+        formData.append("productImages", file.originFileObj);
       });
-    } else if (values.images) {
-      formData.append(`userImage`, values.images.originFileObj);
     }
 
     setLoading(true);
@@ -256,26 +253,27 @@ const ProductPageDash = () => {
   const allowedFileTypes = ["image/png", "image/jpeg"];
   const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 
-  const handleImageChange = (info) => {
-    if (info.file.status === "done") {
-      message.success(`${info.file.name} file uploaded successfully`);
-    }
+  const handleImageChange = ({ fileList }) => {
+    console.log("File", fileList);
+    // if (info.file.status === "done") {
+    //   message.success(`${info.file.name} file uploaded successfully`);
+    // }
 
-    const isLtSize = info.file.size / 1024 / 1024 < MAX_FILE_SIZE;
+    // const isLtSize = info.file.size / 1024 / 1024 < MAX_FILE_SIZE;
 
-    if (!isLtSize) {
-      message.error("Image must be smaller than 10MB!");
-      return false;
-    }
+    // if (!isLtSize) {
+    //   message.error("Image must be smaller than 10MB!");
+    //   return false;
+    // }
 
-    const isImage = allowedFileTypes.includes(info.file.type);
+    // const isImage = allowedFileTypes.includes(info.file.type);
 
-    if (!isImage) {
-      message.error("You can only upload PNG or JPEG file!");
-      return false;
-    }
+    // if (!isImage) {
+    //   message.error("You can only upload PNG or JPEG file!");
+    //   return false;
+    // }
 
-    setUserImages(info.fileList);
+    setUserImages(fileList);
   };
 
   return (
@@ -285,7 +283,6 @@ const ProductPageDash = () => {
           <div className="text-lg text-gray-700">Product</div>
           <div className="text-gray-400">{productList.length} items</div>
         </div>
-       
 
         <Button size="middle" type="primary" onClick={showModal}>
           Add Product
@@ -293,29 +290,29 @@ const ProductPageDash = () => {
       </div>
 
       <div className="flex justify-center mb-5">
-          <Space>
-            <Input.Search
-              value={txtSearch}
-              placeholder="Product Name"
-              allowClear={true}
-            />
-            <Select
-              value={categorySearch}
-              placeholder="Select a category"
-              className="w-[250px]"
-            >
-              {categoryList.map((item, index) => {
-                return (
-                  <Select.Option key={index} value={item.id} allowClear={true}>
-                    {item.categoryName}
-                  </Select.Option>
-                );
-              })}
-            </Select>
-            <Button type="primary">Filter</Button>
-            <Button danger>Clear</Button>
-          </Space>
-        </div>
+        <Space>
+          <Input.Search
+            value={txtSearch}
+            placeholder="Product Name"
+            allowClear={true}
+          />
+          <Select
+            value={categorySearch}
+            placeholder="Select a category"
+            className="w-[250px]"
+          >
+            {categoryList.map((item, index) => {
+              return (
+                <Select.Option key={index} value={item.id} allowClear={true}>
+                  {item.categoryName}
+                </Select.Option>
+              );
+            })}
+          </Select>
+          <Button type="primary">Filter</Button>
+          <Button danger>Clear</Button>
+        </Space>
+      </div>
 
       <Table
         className="mt-2"
