@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { request } from "../../utils/request";
 import MainPageDash from "../mainpage/MainPageDash";
 import {
@@ -42,13 +42,7 @@ const ProductPageDash = () => {
   //use form
   const [form] = Form.useForm();
 
-  useEffect(() => {
-    getList();
-    getCategoryList();
-  }, []);
-
   const getList = async () => {
-    setLoading(true);
     try {
       const res = await request(
         "/api/product?includeCategory=true&includeProductImage=true",
@@ -59,23 +53,33 @@ const ProductPageDash = () => {
       setProductList(res.data.value);
     } catch (error) {
       console.error("An error occurred:", error);
-    } finally {
-      setLoading(false);
     }
   };
 
   const getCategoryList = async () => {
-    setLoading(true);
     try {
       const res = await request("/api/category", "GET", {});
       console.log(res);
       setCategoryList(res.data.value);
     } catch (error) {
       console.error("An error occurred:", error);
-    } finally {
-      setLoading(false);
     }
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        await getList();
+        await getCategoryList();
+      } catch (error) {
+        console.error("An error occurred:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -100,9 +104,9 @@ const ProductPageDash = () => {
     console.log("images: " + JSON.stringify(values.images.fileList));
 
     // Check if values.images is an array before iterating
-    if (Array.isArray(values.images)) {
-        values.images.forEach((file, index) => {
-        formData.append(`userImage${index}`, file.originFileObj);
+    if (Array.isArray(values.images.fileList)) {
+      values.images.fileList.forEach((file) => {
+        formData.append("productImages", file.originFileObj);
       });
     }
 
@@ -375,8 +379,8 @@ const ProductPageDash = () => {
                 ]}
               >
                 <Select showSearch placeholder="Select a category" allowClear>
-                  {categoryList?.map((item, index) => (
-                    <Select.Option key={index} value={item.categoryId}>
+                  {categoryList?.map((item) => (
+                    <Select.Option key={item.id} value={item.categoryId}>
                       {item.categoryName}
                     </Select.Option>
                   ))}
