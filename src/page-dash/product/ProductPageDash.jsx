@@ -1,11 +1,14 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { request } from "../../utils/request";
 import MainPageDash from "../mainpage/MainPageDash";
 import {
+  Avatar,
   Button,
   Col,
   Form,
+  Image,
   Input,
+  List,
   message,
   Modal,
   Popconfirm,
@@ -13,25 +16,31 @@ import {
   Select,
   Space,
   Table,
+  Typography,
   Upload,
 } from "antd";
 import { formatDateClient } from "../../utils/helper";
 import { LiaEdit } from "react-icons/lia";
 import { MdOutlineDelete } from "react-icons/md";
-import { QuestionCircleOutlined, UploadOutlined } from "@ant-design/icons";
+import {
+  DeleteOutlined,
+  QuestionCircleOutlined,
+  UploadOutlined,
+} from "@ant-design/icons";
 import axios from "axios";
+
 const ProductPageDash = () => {
   const [loading, setLoading] = useState(true);
   const [productList, setProductList] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [categoryList, setCategoryList] = useState([]);
   const [productIdEdit, setProductIdEdit] = useState(null);
+  const [productImages, setProductImages] = useState([]);
+  const [removedImages, setRemovedImages] = useState([]);
+
   const [txtSearch, setTxtSearch] = useState("");
   const [categorySearch, setCategorySearch] = useState(null);
 
-  const [userImages, setUserImages] = useState([]);
-
-  //use form
   const [form] = Form.useForm();
 
   const getList = async () => {
@@ -87,6 +96,13 @@ const ProductPageDash = () => {
     setIsModalOpen(false);
     setProductIdEdit(null);
     form.resetFields();
+  };
+
+  const handleRemoveImage = (imageId) => {
+    const updatedImages = form
+      .getFieldValue("existingProductImage")
+      .filter((image) => image.id !== imageId);
+    form.setFieldsValue({ existingProductImage: updatedImages });
   };
 
   const onFinish = (values) => {
@@ -153,7 +169,7 @@ const ProductPageDash = () => {
   };
 
   const handleEdit = (values) => {
-    console.log(values);
+    console.log("edit hre", values);
     setIsModalOpen(true);
     setProductIdEdit(values.id);
 
@@ -163,7 +179,9 @@ const ProductPageDash = () => {
       qty: values.qty,
       description: values.description,
       category: values.category.categoryName,
+      existingProductImage: values.productImage,
     });
+    console.log(form.getFieldValue("existingProductImage")[0]);
   };
 
   const columns = [
@@ -278,7 +296,7 @@ const ProductPageDash = () => {
       return false;
     }
 
-    setUserImages(info.fileList);
+    setProductImages(info.fileList);
   };
 
   return (
@@ -415,11 +433,47 @@ const ProductPageDash = () => {
           </Row>
 
           <Row>
+            <List
+              itemLayout="horizontal"
+              dataSource={form.getFieldValue("existingProductImage")}
+              renderItem={(item, index) => (
+                <Col>
+                  <List.Item
+                    actions={[
+                      <Button
+                        key={index}
+                        type="link"
+                        danger
+                        icon={<DeleteOutlined />}
+                        onClick={() => handleRemoveImage(item.id)}
+                      />,
+                    ]}
+                  >
+                    <div
+                      style={{
+                        textAlign: "center",
+                        display: "flex",
+                        gap: "10px",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Image width={50} src={item.imageUrl} />
+                      <Typography.Text>
+                        Product Image {index + 1}
+                      </Typography.Text>
+                    </div>
+                  </List.Item>
+                </Col>
+              )}
+            />
+          </Row>
+
+          <Row>
             <Col>
               <Form.Item label="Upload Images" name="images" className="mb-3">
                 <Upload
                   listType="text"
-                  fileList={userImages}
+                  fileList={productImages}
                   onChange={handleImageChange}
                   multiple
                 >
