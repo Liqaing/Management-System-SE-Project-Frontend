@@ -20,8 +20,6 @@ import { LiaEdit } from "react-icons/lia";
 import { MdOutlineDelete } from "react-icons/md";
 import { QuestionCircleOutlined, UploadOutlined } from "@ant-design/icons";
 import axios from "axios";
-import { AppContext } from "../../utils/context";
-
 const ProductPageDash = () => {
   const [loading, setLoading] = useState(true);
   const [productList, setProductList] = useState([]);
@@ -31,13 +29,7 @@ const ProductPageDash = () => {
   const [txtSearch, setTxtSearch] = useState("");
   const [categorySearch, setCategorySearch] = useState(null);
 
-  const [productName, setProductName] = useState("");
-  const [description, setDescription] = useState("");
-  const [price, setPrice] = useState("");
-  const [categoryId, setCategoryId] = useState("");
   const [userImages, setUserImages] = useState([]);
-
-  const { user } = useContext(AppContext);
 
   //use form
   const [form] = Form.useForm();
@@ -45,9 +37,13 @@ const ProductPageDash = () => {
   const getList = async () => {
     try {
       const res = await request(
-        "/api/product?includeCategory=true&includeProductImage=true",
+        "/api/product",
         "GET",
-        {}
+        {},
+        {
+          "include[category]": true,
+          "include[productImage]": true,
+        }
       );
       console.log(res);
       setProductList(res.data.value);
@@ -99,12 +95,11 @@ const ProductPageDash = () => {
     formData.append("productName", values.productName);
     formData.append("description", values.description);
     formData.append("price", values.price);
+    formData.append("qty", values.qty);
     formData.append("categoryId", values.category);
 
-    console.log("images: " + JSON.stringify(values.images.fileList));
-
     // Check if values.images is an array before iterating
-    if (Array.isArray(values.images.fileList)) {
+    if (values.images.fileList && Array.isArray(values.images.fileList)) {
       values.images.fileList.forEach((file) => {
         formData.append("productImages", file.originFileObj);
       });
@@ -142,7 +137,7 @@ const ProductPageDash = () => {
   const handleDelete = async (record) => {
     setLoading(true);
     try {
-      const res = await request(`/api/product/${record.id}`, "DELETE", {});
+      const res = await request(`/api/product/${record.id}`, "DELETE", {}, {});
       console.log(res);
       if (res.success === true) {
         message.success(res.data.message);
@@ -165,6 +160,7 @@ const ProductPageDash = () => {
     form.setFieldsValue({
       productName: values.productName,
       price: values.price,
+      qty: values.qty,
       description: values.description,
       category: values.category.categoryName,
     });
@@ -182,7 +178,7 @@ const ProductPageDash = () => {
     {
       title: "Category",
       key: "categoryName",
-      render: (text, record, index) => {
+      render: (text, record) => {
         return record.category.categoryName;
       },
     },
@@ -204,7 +200,7 @@ const ProductPageDash = () => {
     {
       title: "Image",
       key: "image",
-      render: (text, record, index) => {
+      render: (text, record) => {
         return (
           <img
             src={record.productImage[0]?.imageUrl}
@@ -224,7 +220,7 @@ const ProductPageDash = () => {
     {
       title: "Action",
       key: "action",
-      render: (text, record, index) => {
+      render: (text, record) => {
         return (
           <div>
             <Space>
@@ -341,8 +337,8 @@ const ProductPageDash = () => {
         footer={null}
       >
         <Form layout="vertical" form={form} onFinish={onFinish}>
-          <Row gutter={16}>
-            <Col span={12}>
+          <Row>
+            <Col span={24}>
               <Form.Item
                 label="Product Name"
                 name="productName"
@@ -351,17 +347,31 @@ const ProductPageDash = () => {
                 ]}
                 className="mb-3"
               >
-                <Input placeholder="Product Name" value={productName} />
+                <Input placeholder="Product Name" />
               </Form.Item>
             </Col>
+          </Row>
 
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item
+                label="Product Quantity"
+                name="qty"
+                rules={[
+                  { required: true, message: "Please input product qty" },
+                ]}
+                className="mb-3"
+              >
+                <Input type="number" placeholder="Product Quantity" />
+              </Form.Item>
+            </Col>
             <Col span={12}>
               <Form.Item
                 label="Price"
                 name="price"
                 rules={[{ required: true, message: "Please input the price" }]}
               >
-                <Input type="number" placeholder="Price" value={price} />
+                <Input type="number" placeholder="Price" />
               </Form.Item>
             </Col>
           </Row>
@@ -399,11 +409,7 @@ const ProductPageDash = () => {
                 ]}
                 className="mb-3"
               >
-                <Input.TextArea
-                  rows={4}
-                  placeholder="Description"
-                  value={description}
-                />
+                <Input.TextArea rows={4} placeholder="Description" />
               </Form.Item>
             </Col>
           </Row>

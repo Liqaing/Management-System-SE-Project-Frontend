@@ -29,6 +29,8 @@ import { getUser } from "../../utils/helper";
 import { AppContext } from "../../utils/context";
 import { MdManageAccounts } from "react-icons/md";
 import axios from "axios";
+import ErrorAlert from "../ui/ErrorAlert";
+import { ROLES } from "../../utils/constants";
 const { Header, Content, Footer, Sider } = Layout;
 
 function getItem(label, key, icon, children) {
@@ -78,10 +80,10 @@ const items = [
 ];
 
 const DashboardLayout = () => {
-  const { user } = useContext(AppContext);
+  const { user, loading, setUser } = useContext(AppContext);
 
   const navigate = useNavigate();
-  const location = useLocation(); // Get the current location
+  const location = useLocation();
 
   const [collapsed, setCollapsed] = useState(false);
   const {
@@ -89,10 +91,13 @@ const DashboardLayout = () => {
   } = theme.useToken();
 
   useEffect(() => {
-    if (user == null) {
+    if (!user) {
+      navigate("/auth/signin");
+    }
+    if (user.role != ROLES.adminRole && user.role != ROLES.staffRole) {
       navigate("/");
     }
-  }, []);
+  }, [user, navigate, loading]);
 
   const handleLogout = async () => {
     axios
@@ -135,20 +140,20 @@ const DashboardLayout = () => {
             rel="noopener noreferrer"
             href="https://www.aliyun.com"
           >
-             Change Password
+            Change Password
           </a>
         </>
       ),
     },
     {
       key: "3",
-      label:(
+      label: (
         <>
-        <FiLogOut  className="size-4 mr-1 color-re" />
+          <FiLogOut className="size-4 mr-1 color-re" />
 
-         <a onClick={handleLogout}> Logout</a>
+          <a onClick={handleLogout}> Logout</a>
         </>
-      )
+      ),
     },
   ];
 
@@ -203,7 +208,6 @@ const DashboardLayout = () => {
           </div>
           <div>
             <Space size="large" className="mt-2">
-
               <Dropdown
                 menu={{
                   items: itemsProfile,

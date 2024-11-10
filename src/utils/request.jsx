@@ -3,10 +3,11 @@ import { message } from "antd";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL || "http://localhost:8000";
 
-export const request = async (url, method, param) => {
+export const request = async (url, method, param, query) => {
   try {
     const response = await axios({
       url: BASE_URL + url,
+      params: query,
       method: method,
       data: param,
       withCredentials: true,
