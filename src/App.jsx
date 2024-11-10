@@ -27,27 +27,6 @@ const PrivateRoute = ({ element, path, user }) => {
 };
 
 const App = () => {
-  const { user, setUser } = useContext(AppContext);
-
-  useEffect(() => {
-    axios
-      .post("/api/auth/token")
-      .then((res) => {
-        const data = res.data;
-        console.log("token: " + data);
-
-        const userData = {
-          isLogin: data.data.isLogin,
-          username: data.data.username,
-          role: data.data.role,
-        };
-        setUser(userData);
-      })
-      .catch(() => {
-        setUser(null);
-      });
-  }, [setUser]);
-
   return (
     <BrowserRouter>
       <Routes>
@@ -57,7 +36,6 @@ const App = () => {
           <Route path="home" element={<HomePage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Route>
-
         {/* backend route */}
         <Route path="/dashboard" element={<DashboardLayout />}>
           <Route path="" element={<HomePageDash />} />
@@ -69,7 +47,6 @@ const App = () => {
           <Route path="user/customer" element={<CustomerPageDash />} />
           <Route path="*" element={<NotFoundPage />} />
         </Route>
-
         {/* Login Route */}
         <Route path="/auth" element={<LayoutAuth />}>
           <Route path="signin" element={<SignInPage />} />
