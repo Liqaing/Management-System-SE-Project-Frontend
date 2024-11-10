@@ -1,0 +1,49 @@
+
+.contain_grid1{
+    border: 1px solid #EEE;
+    padding: 5px;
+}
+.contain_grid2{
+    border: 1px solid #EEE;
+    padding: 5px;
+}
+.rowProduct{
+    display: flex;
+    justify-content: space-between;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+    background-color: bisque;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.txtID{
+    font-weight: bold;
+}
+.txtName{
+    font-weight: bold;
+}
+.txtDes{
+    color: gray;
+}
+.txtPrice{
+    font-weight: bold;
+    color: chocolate;
+}
+.txtQty{
+
+}
+.containInputSearch{
+    width: 200px;
+    padding: 10px;
+}
+.txtMain{
+    font-weight: bold;
+}
+.roleSummary{
+    display: flex;
+    justify-content: space-between;
+    padding: 5px;
+    margin: 10px;
+}
