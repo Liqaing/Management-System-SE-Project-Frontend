@@ -36,7 +36,9 @@ const ProductPageDash = () => {
   const [categoryList, setCategoryList] = useState([]);
   const [productIdEdit, setProductIdEdit] = useState(null);
   const [productImages, setProductImages] = useState([]);
-  const [removedImages, setRemovedImages] = useState([]);
+  const [productImagesToRemove, setProductImagesToRemove] = useState([]);
+  const [currentProductImagesToRemove, setCurrentProductImagesToRemove] =
+    useState([]);
 
   const [txtSearch, setTxtSearch] = useState("");
   const [categorySearch, setCategorySearch] = useState(null);
@@ -99,6 +101,9 @@ const ProductPageDash = () => {
   };
 
   const handleRemoveImage = (imageId) => {
+    
+    set
+
     const updatedImages = form
       .getFieldValue("existingProductImage")
       .filter((image) => image.id !== imageId);
@@ -179,9 +184,8 @@ const ProductPageDash = () => {
       qty: values.qty,
       description: values.description,
       category: values.category.categoryName,
-      existingProductImage: values.productImage,
     });
-    console.log(form.getFieldValue("existingProductImage")[0]);
+    setCurrentProductImagesToRemove(values.productImage);
   };
 
   const columns = [
@@ -435,7 +439,7 @@ const ProductPageDash = () => {
           <Row>
             <List
               itemLayout="horizontal"
-              dataSource={form.getFieldValue("existingProductImage")}
+              dataSource={currentProductImagesToRemove}
               renderItem={(item, index) => (
                 <Col>
                   <List.Item
