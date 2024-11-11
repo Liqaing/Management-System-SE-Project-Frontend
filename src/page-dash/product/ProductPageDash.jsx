@@ -1,8 +1,7 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { request } from "../../utils/request";
 import MainPageDash from "../mainpage/MainPageDash";
 import {
-  Avatar,
   Button,
   Col,
   Form,
@@ -36,7 +35,8 @@ const ProductPageDash = () => {
   const [categoryList, setCategoryList] = useState([]);
   const [productIdEdit, setProductIdEdit] = useState(null);
   const [productImages, setProductImages] = useState([]);
-  const [removedImages, setRemovedImages] = useState([]);
+  const [productImagesToRemove, setProductImagesToRemove] = useState([]);
+  const [currentProductImages, setCurrentProductImages] = useState([]);
 
   const [txtSearch, setTxtSearch] = useState("");
   const [categorySearch, setCategorySearch] = useState(null);
@@ -88,6 +88,11 @@ const ProductPageDash = () => {
 
   const showModal = () => {
     setIsModalOpen(true);
+    setProductIdEdit(null);
+    form.resetFields();
+    setProductImages([]);
+    setProductImagesToRemove([]);
+    setCurrentProductImages([]);
   };
 
   const handleOk = () => {};
@@ -96,17 +101,20 @@ const ProductPageDash = () => {
     setIsModalOpen(false);
     setProductIdEdit(null);
     form.resetFields();
+    setProductImages([]);
+    setProductImagesToRemove([]);
+    setCurrentProductImages([]);
   };
 
   const handleRemoveImage = (imageId) => {
-    const updatedImages = form
-      .getFieldValue("existingProductImage")
-      .filter((image) => image.id !== imageId);
-    form.setFieldsValue({ existingProductImage: updatedImages });
+    // Add image to remove list
+    setProductImagesToRemove([...productImagesToRemove, imageId]);
+    setCurrentProductImages([
+      ...currentProductImages.filter((image) => image.id !== imageId),
+    ]);
   };
 
   const onFinish = (values) => {
-    console.log("Received values:", values);
     const formData = new FormData();
     formData.append("productName", values.productName);
     formData.append("description", values.description);
@@ -115,22 +123,36 @@ const ProductPageDash = () => {
     formData.append("categoryId", values.category);
 
     // Check if values.images is an array before iterating
-    if (values.images.fileList && Array.isArray(values.images.fileList)) {
+    if (
+      values.images &&
+      values.images.fileList &&
+      Array.isArray(values.images.fileList)
+    ) {
       values.images.fileList.forEach((file) => {
         formData.append("productImages", file.originFileObj);
       });
     }
 
+    const endpoint = productIdEdit
+      ? `/api/product/${productIdEdit}`
+      : "/api/product";
+    const method = productIdEdit ? "PUT" : "POST";
+
+    if (productIdEdit) {
+      formData.append("imagesToDeleteId", productImagesToRemove);
+    }
+
     setLoading(true);
-    axios
-      .post("/api/product", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      })
+    axios({
+      url: endpoint,
+      method: method,
+      data: formData,
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    })
       .then((res) => {
         setLoading(false);
-        console.log("Response:", res.data);
         setIsModalOpen(false);
         if (res.data.success == true) {
           message.success(res.data.data?.message);
@@ -141,8 +163,14 @@ const ProductPageDash = () => {
       })
       .catch((err) => {
         setLoading(false);
-        console.error("Error:", err);
         message.error(err?.response?.data?.error?.message);
+      })
+      .finally(() => {
+        form.resetFields();
+        setProductImages([]);
+        setProductImagesToRemove([]);
+        setCurrentProductImages([]);
+        setProductIdEdit(null);
       });
   };
 
@@ -154,7 +182,6 @@ const ProductPageDash = () => {
     setLoading(true);
     try {
       const res = await request(`/api/product/${record.id}`, "DELETE", {}, {});
-      console.log(res);
       if (res.success === true) {
         message.success(res.data.message);
         getList();
@@ -169,7 +196,8 @@ const ProductPageDash = () => {
   };
 
   const handleEdit = (values) => {
-    console.log("edit hre", values);
+    // Open edit form
+    console.log("edit value: ", values);
     setIsModalOpen(true);
     setProductIdEdit(values.id);
 
@@ -178,10 +206,9 @@ const ProductPageDash = () => {
       price: values.price,
       qty: values.qty,
       description: values.description,
-      category: values.category.categoryName,
-      existingProductImage: values.productImage,
+      category: values.category.id,
     });
-    console.log(form.getFieldValue("existingProductImage")[0]);
+    setCurrentProductImages(values.productImage);
   };
 
   const columns = [
@@ -278,10 +305,6 @@ const ProductPageDash = () => {
   const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 
   const handleImageChange = (info) => {
-    if (info.file.status === "done") {
-      message.success(`${info.file.name} file uploaded successfully`);
-    }
-
     const isLtSize = info.file.size / 1024 / 1024 < MAX_FILE_SIZE;
 
     if (!isLtSize) {
@@ -408,7 +431,7 @@ const ProductPageDash = () => {
               >
                 <Select showSearch placeholder="Select a category" allowClear>
                   {categoryList?.map((item) => (
-                    <Select.Option key={item.id} value={item.categoryId}>
+                    <Select.Option key={item.id} value={item.id}>
                       {item.categoryName}
                     </Select.Option>
                   ))}
@@ -432,41 +455,45 @@ const ProductPageDash = () => {
             </Col>
           </Row>
 
-          <Row>
-            <List
-              itemLayout="horizontal"
-              dataSource={form.getFieldValue("existingProductImage")}
-              renderItem={(item, index) => (
-                <Col>
-                  <List.Item
-                    actions={[
-                      <Button
-                        key={index}
-                        type="link"
-                        danger
-                        icon={<DeleteOutlined />}
-                        onClick={() => handleRemoveImage(item.id)}
-                      />,
-                    ]}
-                  >
-                    <div
-                      style={{
-                        textAlign: "center",
-                        display: "flex",
-                        gap: "10px",
-                        alignItems: "center",
-                      }}
-                    >
-                      <Image width={50} src={item.imageUrl} />
-                      <Typography.Text>
-                        Product Image {index + 1}
-                      </Typography.Text>
-                    </div>
-                  </List.Item>
-                </Col>
-              )}
-            />
-          </Row>
+          {productIdEdit &&
+            currentProductImages &&
+            currentProductImages.length > 0 && (
+              <Row>
+                <List
+                  itemLayout="horizontal"
+                  dataSource={currentProductImages}
+                  renderItem={(item, index) => (
+                    <Col>
+                      <List.Item
+                        actions={[
+                          <Button
+                            key={index}
+                            type="link"
+                            danger
+                            icon={<DeleteOutlined />}
+                            onClick={() => handleRemoveImage(item.id)}
+                          />,
+                        ]}
+                      >
+                        <div
+                          style={{
+                            textAlign: "center",
+                            display: "flex",
+                            gap: "10px",
+                            alignItems: "center",
+                          }}
+                        >
+                          <Image width={50} src={item.imageUrl} />
+                          <Typography.Text>
+                            Product Image {index + 1}
+                          </Typography.Text>
+                        </div>
+                      </List.Item>
+                    </Col>
+                  )}
+                />
+              </Row>
+            )}
 
           <Row>
             <Col>
