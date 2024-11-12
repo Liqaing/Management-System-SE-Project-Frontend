@@ -39,6 +39,9 @@ const ProductPageDash = () => {
   const [productImagesToRemove, setProductImagesToRemove] = useState([]);
   const [currentProductImages, setCurrentProductImages] = useState([]);
 
+  const [detailModalOpen, setDetailModalOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+
   const [txtSearch, setTxtSearch] = useState("");
   const [categorySearch, setCategorySearch] = useState(null);
 
@@ -212,6 +215,17 @@ const ProductPageDash = () => {
     setCurrentProductImages(values.productImage);
   };
 
+  const showDetailModal = (product) => {
+    setSelectedProduct(product);
+    setDetailModalOpen(true);
+  };
+
+  // Close the detail modal
+  const closeDetailModal = () => {
+    setDetailModalOpen(false);
+    setSelectedProduct(null);
+  };
+
   const columns = [
     {
       title: "№",
@@ -278,7 +292,7 @@ const ProductPageDash = () => {
               <Button
                 size="small"
                 type="primary"
-                onClick={() => handleEdit(record)}
+                onClick={() => showDetailModal(record)}
               >
                 <EyeOutlined />
               </Button>
@@ -540,6 +554,42 @@ const ProductPageDash = () => {
         </Form>
       </Modal>
       {/* End Modal Form Insert */}
+
+       {/* Detail Modal */}
+       <Modal
+        title="Product Details"
+        open={detailModalOpen}
+        onCancel={closeDetailModal}
+        footer={[
+          <Button key="close" onClick={closeDetailModal}>
+            Close
+          </Button>,
+        ]}
+      >
+        {selectedProduct && (
+          <div>
+            <Typography.Title level={5}>
+              {selectedProduct.productName}
+            </Typography.Title>
+            <p><strong>Category:</strong> {selectedProduct.category.categoryName}</p>
+            <p><strong>Description:</strong> {selectedProduct.description}</p>
+            <p><strong>Price:</strong> ${selectedProduct.price}</p>
+            <p><strong>Quantity:</strong> {selectedProduct.qty}</p>
+            <p><strong>Created At:</strong> {formatDateClient(selectedProduct.createAt)}</p>
+            <p><strong>Product Images:</strong></p>
+            <Row gutter={16}>
+              {selectedProduct.productImage.map((image, index) => (
+                <Col key={index} span={8}>
+                  <Image src={image.imageUrl} alt={`Product Image ${index + 1}`} width={100} />
+                </Col>
+              ))}
+            </Row>
+          </div>
+        )}
+      </Modal>
+
+      {/* End Detail Modal */}
+
     </MainPageDash>
   );
 };
