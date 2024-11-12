@@ -243,11 +243,16 @@ const ProductPageDash = () => {
       dataIndex: "price",
     },
     {
+      title: "Quantity",
+      key: "qty",
+      dataIndex: "qty",
+    },
+    {
       title: "Image",
       key: "image",
       render: (text, record) => {
         return (
-          <img
+          <Image
             src={record.productImage[0]?.imageUrl}
             alt="Product Image"
             style={{ width: 100, height: "auto" }}
