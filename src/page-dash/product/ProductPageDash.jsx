@@ -25,6 +25,7 @@ import {
   DeleteOutlined,
   QuestionCircleOutlined,
   UploadOutlined,
+  EyeOutlined,
 } from "@ant-design/icons";
 import axios from "axios";
 
@@ -274,6 +275,14 @@ const ProductPageDash = () => {
         return (
           <div>
             <Space>
+              <Button
+                size="small"
+                type="primary"
+                onClick={() => handleEdit(record)}
+              >
+                <EyeOutlined />
+              </Button>
+
               <Button
                 size="small"
                 type="primary"
