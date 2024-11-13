@@ -3,6 +3,7 @@ import { request } from "../../utils/request";
 import MainPageDash from "../mainpage/MainPageDash";
 import {
   Button,
+  Carousel,
   Col,
   Form,
   Image,
@@ -39,8 +40,9 @@ const ProductPageDash = () => {
   const [productImagesToRemove, setProductImagesToRemove] = useState([]);
   const [currentProductImages, setCurrentProductImages] = useState([]);
 
-  const [detailModalOpen, setDetailModalOpen] = useState(false);
+  // Product datails
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
 
   const [txtSearch, setTxtSearch] = useState("");
   const [categorySearch, setCategorySearch] = useState(null);
@@ -217,13 +219,13 @@ const ProductPageDash = () => {
 
   const showDetailModal = (product) => {
     setSelectedProduct(product);
-    setDetailModalOpen(true);
+    setIsDetailModalOpen(true);
   };
 
   // Close the detail modal
   const closeDetailModal = () => {
-    setDetailModalOpen(false);
     setSelectedProduct(null);
+    setIsDetailModalOpen(false);
   };
 
   const columns = [
@@ -555,10 +557,10 @@ const ProductPageDash = () => {
       </Modal>
       {/* End Modal Form Insert */}
 
-       {/* Detail Modal */}
-       <Modal
+      {/* Detail Modal */}
+      <Modal
         title="Product Details"
-        open={detailModalOpen}
+        open={isDetailModalOpen}
         onCancel={closeDetailModal}
         footer={[
           <Button key="close" onClick={closeDetailModal}>
@@ -571,25 +573,42 @@ const ProductPageDash = () => {
             <Typography.Title level={5}>
               {selectedProduct.productName}
             </Typography.Title>
-            <p><strong>Category:</strong> {selectedProduct.category.categoryName}</p>
-            <p><strong>Description:</strong> {selectedProduct.description}</p>
-            <p><strong>Price:</strong> ${selectedProduct.price}</p>
-            <p><strong>Quantity:</strong> {selectedProduct.qty}</p>
-            <p><strong>Created At:</strong> {formatDateClient(selectedProduct.createAt)}</p>
-            <p><strong>Product Images:</strong></p>
-            <Row gutter={16}>
+
+            <Carousel arrows infinite={false}>
               {selectedProduct.productImage.map((image, index) => (
                 <Col key={index} span={8}>
-                  <Image src={image.imageUrl} alt={`Product Image ${index + 1}`} width={100} />
+                  <Image
+                    src={image.imageUrl}
+                    alt={`Product Image ${index + 1}`}
+                  />
                 </Col>
               ))}
-            </Row>
+            </Carousel>
+
+            <p>
+              <strong>Category:</strong> {selectedProduct.category.categoryName}
+            </p>
+            <p>
+              <strong>Description:</strong> {selectedProduct.description}
+            </p>
+            <p>
+              <strong>Price:</strong> ${selectedProduct.price}
+            </p>
+            <p>
+              <strong>Quantity:</strong> {selectedProduct.qty}
+            </p>
+            <p>
+              <strong>Created At:</strong>{" "}
+              {formatDateClient(selectedProduct.createAt)}
+            </p>
+            <p>
+              <strong>Product Images:</strong>
+            </p>
           </div>
         )}
       </Modal>
 
       {/* End Detail Modal */}
-
     </MainPageDash>
   );
 };
