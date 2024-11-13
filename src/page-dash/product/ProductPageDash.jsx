@@ -574,14 +574,15 @@ const ProductPageDash = () => {
               {selectedProduct.productName}
             </Typography.Title>
 
-            <Carousel arrows infinite={false}>
+            <Carousel arrows autoplay infinite={false}>
               {selectedProduct.productImage.map((image, index) => (
-                <Col key={index} span={8}>
-                  <Image
-                    src={image.imageUrl}
-                    alt={`Product Image ${index + 1}`}
-                  />
-                </Col>
+                <Image
+                  key={index}
+                  src={image.imageUrl}
+                  alt={`Product Image ${index + 1}`}
+                  loading="lazy"
+                  width="100"
+                />
               ))}
             </Carousel>
 
