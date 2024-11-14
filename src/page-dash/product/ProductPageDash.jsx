@@ -47,11 +47,10 @@ const ProductPageDash = () => {
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
 
   const [txtSearch, setTxtSearch] = useState("");
-  const [categorySearch, setCategorySearch] = useState(null);
 
   const [form] = Form.useForm();
 
-  const getList = async () => {
+  const getList = async (searchValue = {}) => {
     try {
       const res = await request(
         "/api/product",
@@ -60,11 +59,29 @@ const ProductPageDash = () => {
         {
           "include[category]": true,
           "include[productImage]": true,
+          ...searchValue,
         }
       );
       setProductList(res.data.value);
     } catch (error) {
       console.error("An error occurred:", error);
+    }
+  };
+
+  const getProductByCategory = async (id) => {
+    try {
+      const res = await request(
+        `/api/category/${id}`,
+        "GET",
+        {},
+        {
+          "include[product]": true,
+        }
+      );
+      console.log(res);
+      setProductList(res.data.category.product);
+    } catch {
+      ErrorAlert(undefined, "Error filter category");
     }
   };
 
@@ -100,8 +117,6 @@ const ProductPageDash = () => {
     setProductImagesToRemove([]);
     setCurrentProductImages([]);
   };
-
-  const handleOk = () => {};
 
   const handleCancel = () => {
     setIsModalOpen(false);
@@ -210,6 +225,10 @@ const ProductPageDash = () => {
       category: values.category.id,
     });
     setCurrentProductImages(values.productImage);
+  };
+
+  const handleSearchProduct = async () => {
+    await getList({ "search[productName]": txtSearch });
   };
 
   const showDetailModal = (product) => {
@@ -351,7 +370,7 @@ const ProductPageDash = () => {
       <div className="flex justify-between">
         <div>
           <div className="text-lg text-gray-700">Product</div>
-          <div className="text-gray-400">{productList.length} items</div>
+          {/* <div className="text-gray-400">{productList.length} items</div> */}
         </div>
 
         <Button size="middle" type="primary" onClick={showModal}>
@@ -365,11 +384,15 @@ const ProductPageDash = () => {
             value={txtSearch}
             placeholder="Product Name"
             allowClear={true}
+            onChange={(e) => setTxtSearch(e.target.value)}
+            onSearch={handleSearchProduct}
           />
           <Select
-            value={categorySearch}
             placeholder="Select a category"
             className="w-[250px]"
+            onSelect={async (id) => {
+              await getProductByCategory(id);
+            }}
           >
             {categoryList.map((item, index) => {
               return (
@@ -379,8 +402,14 @@ const ProductPageDash = () => {
               );
             })}
           </Select>
-          <Button type="primary">Filter</Button>
-          <Button danger>Clear</Button>
+          <Button
+            onClick={async () => {
+              await getList();
+              setTxtSearch("");
+            }}
+          >
+            Clear
+          </Button>
         </Space>
       </div>
 
@@ -396,7 +425,6 @@ const ProductPageDash = () => {
       <Modal
         title={productIdEdit == null ? "Add Product" : "Edit Product"}
         open={isModalOpen}
-        onOk={handleOk}
         onCancel={handleCancel}
         maskClosable={false}
         footer={null}
@@ -564,7 +592,13 @@ const ProductPageDash = () => {
       >
         {selectedProduct && (
           <div>
-            <Carousel arrows autoplay infinite={true} className="bg-slate-500">
+            <Carousel
+              arrows
+              autoplay
+              autoplaySpeed={6000}
+              infinite={true}
+              className="bg-slate-500"
+            >
               {selectedProduct.productImage.map((image, index) => (
                 <div
                   key={index}
@@ -585,7 +619,7 @@ const ProductPageDash = () => {
               labelStyle={{
                 fontSize: "0.8rem",
                 marginBottom: "0",
-                width: "30%"
+                width: "30%",
               }}
               className="mt-5"
             >
