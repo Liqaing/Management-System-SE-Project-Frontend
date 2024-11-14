@@ -5,11 +5,11 @@ import {
   Button,
   Carousel,
   Col,
+  Descriptions,
   Form,
   Image,
   Input,
   List,
-  message,
   Modal,
   Popconfirm,
   Row,
@@ -553,7 +553,7 @@ const ProductPageDash = () => {
 
       {/* Detail Modal */}
       <Modal
-        title="Product Details"
+        title={`Product: ${selectedProduct ? selectedProduct.productName : ""}`}
         open={isDetailModalOpen}
         onCancel={closeDetailModal}
         footer={[
@@ -564,41 +564,47 @@ const ProductPageDash = () => {
       >
         {selectedProduct && (
           <div>
-            <Typography.Title level={5}>
-              {selectedProduct.productName}
-            </Typography.Title>
-
-            <Carousel arrows autoplay infinite={false}>
+            <Carousel arrows autoplay infinite={true} className="bg-slate-500">
               {selectedProduct.productImage.map((image, index) => (
-                <Image
+                <div
                   key={index}
-                  src={image.imageUrl}
-                  alt={`Product Image ${index + 1}`}
-                  loading="lazy"
-                  width="100"
-                />
+                  className="!flex justify-center item-center content-center"
+                >
+                  <Image
+                    src={image.imageUrl}
+                    alt={`Product Image ${index + 1}`}
+                    loading="lazy"
+                    fluid
+                  />
+                </div>
               ))}
             </Carousel>
-
-            <p>
-              <strong>Category:</strong> {selectedProduct.category.categoryName}
-            </p>
-            <p>
-              <strong>Description:</strong> {selectedProduct.description}
-            </p>
-            <p>
-              <strong>Price:</strong> ${selectedProduct.price}
-            </p>
-            <p>
-              <strong>Quantity:</strong> {selectedProduct.qty}
-            </p>
-            <p>
-              <strong>Created At:</strong>{" "}
-              {formatDateClient(selectedProduct.createAt)}
-            </p>
-            <p>
-              <strong>Product Images:</strong>
-            </p>
+            <Descriptions
+              size="small"
+              column={1}
+              labelStyle={{
+                fontSize: "0.8rem",
+                marginBottom: "0",
+                width: "30%"
+              }}
+              className="mt-5"
+            >
+              <Descriptions.Item label="Product Name">
+                {selectedProduct.productName}
+              </Descriptions.Item>
+              <Descriptions.Item label="Product Price">
+                {selectedProduct.price}
+              </Descriptions.Item>
+              <Descriptions.Item label="Product Qauntity">
+                {selectedProduct.qty}
+              </Descriptions.Item>
+              <Descriptions.Item label="Product Category">
+                {selectedProduct.category.categoryName}
+              </Descriptions.Item>
+              <Descriptions.Item label="Product Description">
+                {selectedProduct.description}
+              </Descriptions.Item>
+            </Descriptions>
           </div>
         )}
       </Modal>
