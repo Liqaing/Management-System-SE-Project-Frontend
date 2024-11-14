@@ -3,12 +3,13 @@ import { request } from "../../utils/request";
 import MainPageDash from "../mainpage/MainPageDash";
 import {
   Button,
+  Carousel,
   Col,
+  Descriptions,
   Form,
   Image,
   Input,
   List,
-  message,
   Modal,
   Popconfirm,
   Row,
@@ -25,8 +26,11 @@ import {
   DeleteOutlined,
   QuestionCircleOutlined,
   UploadOutlined,
+  EyeOutlined,
 } from "@ant-design/icons";
 import axios from "axios";
+import ErrorAlert from "../../component/ui/ErrorAlert";
+import SuccessAlert from "../../component/ui/SuccessAlert";
 
 const ProductPageDash = () => {
   const [loading, setLoading] = useState(true);
@@ -38,12 +42,15 @@ const ProductPageDash = () => {
   const [productImagesToRemove, setProductImagesToRemove] = useState([]);
   const [currentProductImages, setCurrentProductImages] = useState([]);
 
+  // Product datails
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+
   const [txtSearch, setTxtSearch] = useState("");
-  const [categorySearch, setCategorySearch] = useState(null);
 
   const [form] = Form.useForm();
 
-  const getList = async () => {
+  const getList = async (searchValue = {}) => {
     try {
       const res = await request(
         "/api/product",
@@ -52,19 +59,35 @@ const ProductPageDash = () => {
         {
           "include[category]": true,
           "include[productImage]": true,
+          ...searchValue,
         }
       );
-      console.log(res);
       setProductList(res.data.value);
     } catch (error) {
       console.error("An error occurred:", error);
     }
   };
 
+  const getProductByCategory = async (id) => {
+    try {
+      const res = await request(
+        `/api/category/${id}`,
+        "GET",
+        {},
+        {
+          "include[product]": true,
+        }
+      );
+      console.log(res);
+      setProductList(res.data.category.product);
+    } catch {
+      ErrorAlert(undefined, "Error filter category");
+    }
+  };
+
   const getCategoryList = async () => {
     try {
       const res = await request("/api/category", "GET", {});
-      console.log(res);
       setCategoryList(res.data.value);
     } catch (error) {
       console.error("An error occurred:", error);
@@ -94,8 +117,6 @@ const ProductPageDash = () => {
     setProductImagesToRemove([]);
     setCurrentProductImages([]);
   };
-
-  const handleOk = () => {};
 
   const handleCancel = () => {
     setIsModalOpen(false);
@@ -155,15 +176,15 @@ const ProductPageDash = () => {
         setLoading(false);
         setIsModalOpen(false);
         if (res.data.success == true) {
-          message.success(res.data.data?.message);
+          SuccessAlert(undefined, res.data.data?.message);
           getList();
         } else {
-          message.success(res.data.data?.message);
+          ErrorAlert(undefined, res.data.data?.message);
         }
       })
       .catch((err) => {
         setLoading(false);
-        message.error(err?.response?.data?.error?.message);
+        ErrorAlert(undefined, err?.response?.data?.error?.message);
       })
       .finally(() => {
         form.resetFields();
@@ -174,22 +195,18 @@ const ProductPageDash = () => {
       });
   };
 
-  const cancel = (e) => {
-    console.log(e);
-  };
-
   const handleDelete = async (record) => {
     setLoading(true);
     try {
       const res = await request(`/api/product/${record.id}`, "DELETE", {}, {});
       if (res.success === true) {
-        message.success(res.data.message);
+        SuccessAlert(undefined, res.data.message);
         getList();
       } else {
-        message.success(res.data.message);
+        SuccessAlert(undefined, res.data.message);
       }
     } catch (error) {
-      console.error("An error occurred:", error);
+      ErrorAlert(undefined, `An error occurred: ${error}`);
     } finally {
       setLoading(false);
     }
@@ -197,7 +214,6 @@ const ProductPageDash = () => {
 
   const handleEdit = (values) => {
     // Open edit form
-    console.log("edit value: ", values);
     setIsModalOpen(true);
     setProductIdEdit(values.id);
 
@@ -209,6 +225,21 @@ const ProductPageDash = () => {
       category: values.category.id,
     });
     setCurrentProductImages(values.productImage);
+  };
+
+  const handleSearchProduct = async () => {
+    await getList({ "search[productName]": txtSearch });
+  };
+
+  const showDetailModal = (product) => {
+    setSelectedProduct(product);
+    setIsDetailModalOpen(true);
+  };
+
+  // Close the detail modal
+  const closeDetailModal = () => {
+    setSelectedProduct(null);
+    setIsDetailModalOpen(false);
   };
 
   const columns = [
@@ -243,11 +274,16 @@ const ProductPageDash = () => {
       dataIndex: "price",
     },
     {
+      title: "Quantity",
+      key: "qty",
+      dataIndex: "qty",
+    },
+    {
       title: "Image",
       key: "image",
       render: (text, record) => {
         return (
-          <img
+          <Image
             src={record.productImage[0]?.imageUrl}
             alt="Product Image"
             style={{ width: 100, height: "auto" }}
@@ -272,6 +308,14 @@ const ProductPageDash = () => {
               <Button
                 size="small"
                 type="primary"
+                onClick={() => showDetailModal(record)}
+              >
+                <EyeOutlined />
+              </Button>
+
+              <Button
+                size="small"
+                type="primary"
                 onClick={() => handleEdit(record)}
               >
                 <LiaEdit />
@@ -280,7 +324,6 @@ const ProductPageDash = () => {
               <Popconfirm
                 title="Delete the task"
                 description="Are you sure to delete?"
-                onCancel={cancel}
                 onConfirm={() => handleDelete(record)}
                 icon={
                   <QuestionCircleOutlined
@@ -304,18 +347,18 @@ const ProductPageDash = () => {
   const allowedFileTypes = ["image/png", "image/jpeg"];
   const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 
-  const handleImageChange = (info) => {
+  const handleImageChange = async (info) => {
     const isLtSize = info.file.size / 1024 / 1024 < MAX_FILE_SIZE;
 
     if (!isLtSize) {
-      message.error("Image must be smaller than 10MB!");
+      await ErrorAlert(undefined, "Image must be smaller than 10MB!");
       return false;
     }
 
     const isImage = allowedFileTypes.includes(info.file.type);
 
     if (!isImage) {
-      message.error("You can only upload PNG or JPEG file!");
+      await ErrorAlert(undefined, "You can only upload PNG or JPEG file!");
       return false;
     }
 
@@ -327,7 +370,7 @@ const ProductPageDash = () => {
       <div className="flex justify-between">
         <div>
           <div className="text-lg text-gray-700">Product</div>
-          <div className="text-gray-400">{productList.length} items</div>
+          {/* <div className="text-gray-400">{productList.length} items</div> */}
         </div>
 
         <Button size="middle" type="primary" onClick={showModal}>
@@ -341,11 +384,15 @@ const ProductPageDash = () => {
             value={txtSearch}
             placeholder="Product Name"
             allowClear={true}
+            onChange={(e) => setTxtSearch(e.target.value)}
+            onSearch={handleSearchProduct}
           />
           <Select
-            value={categorySearch}
             placeholder="Select a category"
             className="w-[250px]"
+            onSelect={async (id) => {
+              await getProductByCategory(id);
+            }}
           >
             {categoryList.map((item, index) => {
               return (
@@ -355,8 +402,14 @@ const ProductPageDash = () => {
               );
             })}
           </Select>
-          <Button type="primary">Filter</Button>
-          <Button danger>Clear</Button>
+          <Button
+            onClick={async () => {
+              await getList();
+              setTxtSearch("");
+            }}
+          >
+            Clear
+          </Button>
         </Space>
       </div>
 
@@ -372,7 +425,6 @@ const ProductPageDash = () => {
       <Modal
         title={productIdEdit == null ? "Add Product" : "Edit Product"}
         open={isModalOpen}
-        onOk={handleOk}
         onCancel={handleCancel}
         maskClosable={false}
         footer={null}
@@ -526,6 +578,72 @@ const ProductPageDash = () => {
         </Form>
       </Modal>
       {/* End Modal Form Insert */}
+
+      {/* Detail Modal */}
+      <Modal
+        title={`Product: ${selectedProduct ? selectedProduct.productName : ""}`}
+        open={isDetailModalOpen}
+        onCancel={closeDetailModal}
+        footer={[
+          <Button key="close" onClick={closeDetailModal}>
+            Close
+          </Button>,
+        ]}
+      >
+        {selectedProduct && (
+          <div>
+            <Carousel
+              arrows
+              autoplay
+              autoplaySpeed={6000}
+              infinite={true}
+              className="bg-slate-500"
+            >
+              {selectedProduct.productImage.map((image, index) => (
+                <div
+                  key={index}
+                  className="!flex justify-center item-center content-center"
+                >
+                  <Image
+                    src={image.imageUrl}
+                    alt={`Product Image ${index + 1}`}
+                    loading="lazy"
+                    fluid
+                  />
+                </div>
+              ))}
+            </Carousel>
+            <Descriptions
+              size="small"
+              column={1}
+              labelStyle={{
+                fontSize: "0.8rem",
+                marginBottom: "0",
+                width: "30%",
+              }}
+              className="mt-5"
+            >
+              <Descriptions.Item label="Product Name">
+                {selectedProduct.productName}
+              </Descriptions.Item>
+              <Descriptions.Item label="Product Price">
+                {selectedProduct.price}
+              </Descriptions.Item>
+              <Descriptions.Item label="Product Qauntity">
+                {selectedProduct.qty}
+              </Descriptions.Item>
+              <Descriptions.Item label="Product Category">
+                {selectedProduct.category.categoryName}
+              </Descriptions.Item>
+              <Descriptions.Item label="Product Description">
+                {selectedProduct.description}
+              </Descriptions.Item>
+            </Descriptions>
+          </div>
+        )}
+      </Modal>
+
+      {/* End Detail Modal */}
     </MainPageDash>
   );
 };
