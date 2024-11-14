@@ -27,6 +27,8 @@ import {
   UploadOutlined,
 } from "@ant-design/icons";
 import axios from "axios";
+import ErrorAlert from "../../component/ui/ErrorAlert";
+import SuccessAlert from "../../component/ui/SuccessAlert";
 
 const ProductPageDash = () => {
   const [loading, setLoading] = useState(true);
@@ -54,7 +56,6 @@ const ProductPageDash = () => {
           "include[productImage]": true,
         }
       );
-      console.log(res);
       setProductList(res.data.value);
     } catch (error) {
       console.error("An error occurred:", error);
@@ -64,7 +65,6 @@ const ProductPageDash = () => {
   const getCategoryList = async () => {
     try {
       const res = await request("/api/category", "GET", {});
-      console.log(res);
       setCategoryList(res.data.value);
     } catch (error) {
       console.error("An error occurred:", error);
@@ -155,15 +155,15 @@ const ProductPageDash = () => {
         setLoading(false);
         setIsModalOpen(false);
         if (res.data.success == true) {
-          message.success(res.data.data?.message);
+          SuccessAlert(undefined, res.data.data?.message);
           getList();
         } else {
-          message.success(res.data.data?.message);
+          ErrorAlert(undefined, res.data.data?.message);
         }
       })
       .catch((err) => {
         setLoading(false);
-        message.error(err?.response?.data?.error?.message);
+        ErrorAlert(undefined, err?.response?.data?.error?.message);
       })
       .finally(() => {
         form.resetFields();
@@ -174,22 +174,18 @@ const ProductPageDash = () => {
       });
   };
 
-  const cancel = (e) => {
-    console.log(e);
-  };
-
   const handleDelete = async (record) => {
     setLoading(true);
     try {
       const res = await request(`/api/product/${record.id}`, "DELETE", {}, {});
       if (res.success === true) {
-        message.success(res.data.message);
+        SuccessAlert(undefined, res.data.message);
         getList();
       } else {
-        message.success(res.data.message);
+        SuccessAlert(undefined, res.data.message);
       }
     } catch (error) {
-      console.error("An error occurred:", error);
+      ErrorAlert(undefined, `An error occurred: ${error}`);
     } finally {
       setLoading(false);
     }
@@ -197,7 +193,6 @@ const ProductPageDash = () => {
 
   const handleEdit = (values) => {
     // Open edit form
-    console.log("edit value: ", values);
     setIsModalOpen(true);
     setProductIdEdit(values.id);
 
@@ -280,7 +275,6 @@ const ProductPageDash = () => {
               <Popconfirm
                 title="Delete the task"
                 description="Are you sure to delete?"
-                onCancel={cancel}
                 onConfirm={() => handleDelete(record)}
                 icon={
                   <QuestionCircleOutlined
@@ -304,18 +298,18 @@ const ProductPageDash = () => {
   const allowedFileTypes = ["image/png", "image/jpeg"];
   const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 
-  const handleImageChange = (info) => {
+  const handleImageChange = async (info) => {
     const isLtSize = info.file.size / 1024 / 1024 < MAX_FILE_SIZE;
 
     if (!isLtSize) {
-      message.error("Image must be smaller than 10MB!");
+      await ErrorAlert(undefined, "Image must be smaller than 10MB!");
       return false;
     }
 
     const isImage = allowedFileTypes.includes(info.file.type);
 
     if (!isImage) {
-      message.error("You can only upload PNG or JPEG file!");
+      await ErrorAlert(undefined, "You can only upload PNG or JPEG file!");
       return false;
     }
 
