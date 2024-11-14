@@ -3,6 +3,7 @@ import { request } from "../../utils/request";
 import MainPageDash from "../mainpage/MainPageDash";
 import {
   Button,
+  Carousel,
   Col,
   Form,
   Image,
@@ -25,6 +26,7 @@ import {
   DeleteOutlined,
   QuestionCircleOutlined,
   UploadOutlined,
+  EyeOutlined,
 } from "@ant-design/icons";
 import axios from "axios";
 import ErrorAlert from "../../component/ui/ErrorAlert";
@@ -39,6 +41,10 @@ const ProductPageDash = () => {
   const [productImages, setProductImages] = useState([]);
   const [productImagesToRemove, setProductImagesToRemove] = useState([]);
   const [currentProductImages, setCurrentProductImages] = useState([]);
+
+  // Product datails
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
 
   const [txtSearch, setTxtSearch] = useState("");
   const [categorySearch, setCategorySearch] = useState(null);
@@ -206,6 +212,17 @@ const ProductPageDash = () => {
     setCurrentProductImages(values.productImage);
   };
 
+  const showDetailModal = (product) => {
+    setSelectedProduct(product);
+    setIsDetailModalOpen(true);
+  };
+
+  // Close the detail modal
+  const closeDetailModal = () => {
+    setSelectedProduct(null);
+    setIsDetailModalOpen(false);
+  };
+
   const columns = [
     {
       title: "№",
@@ -238,11 +255,16 @@ const ProductPageDash = () => {
       dataIndex: "price",
     },
     {
+      title: "Quantity",
+      key: "qty",
+      dataIndex: "qty",
+    },
+    {
       title: "Image",
       key: "image",
       render: (text, record) => {
         return (
-          <img
+          <Image
             src={record.productImage[0]?.imageUrl}
             alt="Product Image"
             style={{ width: 100, height: "auto" }}
@@ -264,6 +286,14 @@ const ProductPageDash = () => {
         return (
           <div>
             <Space>
+              <Button
+                size="small"
+                type="primary"
+                onClick={() => showDetailModal(record)}
+              >
+                <EyeOutlined />
+              </Button>
+
               <Button
                 size="small"
                 type="primary"
@@ -520,6 +550,60 @@ const ProductPageDash = () => {
         </Form>
       </Modal>
       {/* End Modal Form Insert */}
+
+      {/* Detail Modal */}
+      <Modal
+        title="Product Details"
+        open={isDetailModalOpen}
+        onCancel={closeDetailModal}
+        footer={[
+          <Button key="close" onClick={closeDetailModal}>
+            Close
+          </Button>,
+        ]}
+      >
+        {selectedProduct && (
+          <div>
+            <Typography.Title level={5}>
+              {selectedProduct.productName}
+            </Typography.Title>
+
+            <Carousel arrows autoplay infinite={false}>
+              {selectedProduct.productImage.map((image, index) => (
+                <Image
+                  key={index}
+                  src={image.imageUrl}
+                  alt={`Product Image ${index + 1}`}
+                  loading="lazy"
+                  width="100"
+                />
+              ))}
+            </Carousel>
+
+            <p>
+              <strong>Category:</strong> {selectedProduct.category.categoryName}
+            </p>
+            <p>
+              <strong>Description:</strong> {selectedProduct.description}
+            </p>
+            <p>
+              <strong>Price:</strong> ${selectedProduct.price}
+            </p>
+            <p>
+              <strong>Quantity:</strong> {selectedProduct.qty}
+            </p>
+            <p>
+              <strong>Created At:</strong>{" "}
+              {formatDateClient(selectedProduct.createAt)}
+            </p>
+            <p>
+              <strong>Product Images:</strong>
+            </p>
+          </div>
+        )}
+      </Modal>
+
+      {/* End Detail Modal */}
     </MainPageDash>
   );
 };
