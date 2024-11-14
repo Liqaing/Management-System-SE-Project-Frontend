@@ -1,7 +1,4 @@
-import { useContext, useEffect } from "react";
-import axios from "axios";
-import { AppContext } from "./utils/context";
-import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import FrontendLayout from "./component/layout/FrontendLayout.jsx";
 import HomePage from "./page/home/HomePage.jsx";
 import NotFoundPage from "./page/error/404.jsx";
@@ -16,15 +13,6 @@ import DashboardLayout from "./component/layout/DashboardLayout.jsx";
 import EmployeePageDash from "./page-dash/user/EmployeePageDash.jsx";
 import CustomerPageDash from "./page-dash/user/CustomerPageDash.jsx";
 import POS from "./page-dash/pos/POS.jsx";
-
-const PrivateRoute = ({ element, path, user }) => {
-  if (user === null && path.includes("dashboard")) {
-    // Redirect unauthenticated users trying to access dashboard routes
-    return <Navigate to="/auth/signin" replace />;
-  }
-
-  return <Route path={path} element={element} />;
-};
 
 const App = () => {
   return (
