@@ -7,6 +7,7 @@ import ErrorAlert from "../../component/ui/ErrorAlert";
 import { BsTelephone } from "react-icons/bs";
 import { AppContext } from "../../utils/context";
 import { request } from "../../utils/request";
+import "./style.css";
 
 const SignupPage = () => {
   const { user, loading, setLoading } = useContext(AppContext);
@@ -26,7 +27,7 @@ const SignupPage = () => {
       var res = await request("/api/auth/signup","POST",param);
       console.log(res);
       if(res.success==true){
-        navigate("/auth/signin");
+        navigate("/account/signin");
       }
     } catch (err) {
       console.log(err.response?.data?.error.message);
@@ -40,7 +41,7 @@ const SignupPage = () => {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen bg-gray-100">
+    <div className="banner flex justify-center items-center h-screen bg-gray-100">
       <Form
         name="register-form"
         form={form}
@@ -101,7 +102,7 @@ const SignupPage = () => {
         <div className="text-center">
           <p>
             Already have an account?{" "}
-            <Link to="/auth/signin" className="text-blue-500">
+            <Link to="/account/signin" className="text-blue-500">
               Sign In
             </Link>
           </p>

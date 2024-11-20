@@ -9,10 +9,7 @@ import {
   Outlet,
 } from "react-router-dom";
 import FrontendLayout from "./component/layout/FrontendLayout.jsx";
-import HomePage from "./page/home/HomePage.jsx";
-import NotFoundPage from "./page/error/404.jsx";
 
-import HomePageDash from "./page-dash/home/HomePageDash.jsx";
 import LayoutAuth from "./component/layout/LayoutAuth.jsx";
 import SignupPage from "./page/auth/SignupPage.jsx";
 import SignInPage from "./page/auth/SignInPage.jsx";
@@ -22,7 +19,16 @@ import DashboardLayout from "./component/layout/DashboardLayout.jsx";
 import EmployeePageDash from "./page-dash/user/EmployeePageDash.jsx";
 import CustomerPageDash from "./page-dash/user/CustomerPageDash.jsx";
 import POS from "./page-dash/pos/POS.jsx";
+import HomePage from "./page/home/HomePage.jsx";
+import HomePageDash from "./page-dash/home/HomePageDash.jsx";
+import NotFoundPage from "./page/error/NotFoundPage.jsx";
 
+import Orders from "./component/profile/Orders.jsx";
+import ProfileLayout from "./component/layout/ProfileLayout.jsx";
+import Favorites from "./component/profile/Favorites.jsx";
+import Address from "./component/profile/Address.jsx";
+import Payment from "./component/profile/Payment.jsx";
+import Events from "./component/profile/Events.jsx";
 
 const ProtectedRoute = ({ user }) => {
   if (user === null) return <Navigate to="/auth/signin" />;
@@ -59,13 +65,20 @@ const App = () => {
         <Route path="/" element={<FrontendLayout />}>
           <Route index element={<HomePage />} />
           <Route path="home" element={<HomePage />} />
-          <Route path="*" element={<NotFoundPage />} />
         </Route>
 
-        <Route path="/auth" element={<LayoutAuth />}>
+        <Route path="/my-profile" element={<ProfileLayout />}>
+          <Route index element={<Orders />} />
+          <Route path="order" element={<Orders />} />
+          <Route path="favorites" element={<Favorites />} />
+          <Route path="address" element={<Address />} />
+          <Route path="payments" element={<Payment />} />
+          <Route path="events" element={<Events />} />
+        </Route>
+
+        <Route path="/account" element={<LayoutAuth />}>
           <Route path="signin" element={<SignInPage />} />
           <Route path="signup" element={<SignupPage />} />
-          <Route path="*" element={<NotFoundPage />} />
         </Route>
 
         <Route path="/dashboard" element={<ProtectedRoute user={user} />}>
@@ -78,8 +91,9 @@ const App = () => {
             <Route path="user/employee" element={<EmployeePageDash />} />
             <Route path="user/customer" element={<CustomerPageDash />} />
           </Route>
-          <Route path="*" element={<NotFoundPage />} />
         </Route>
+
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>
   );

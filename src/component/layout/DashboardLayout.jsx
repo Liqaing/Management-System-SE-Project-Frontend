@@ -92,7 +92,7 @@ const DashboardLayout = () => {
 
   useEffect(() => {
     if (!user) {
-      navigate("/auth/signin");
+      navigate("/account/signin");
     }
     if (user.role != ROLES.adminRole && user.role != ROLES.staffRole) {
       navigate("/");
@@ -123,7 +123,7 @@ const DashboardLayout = () => {
           <a
             target="_blank"
             rel="noopener noreferrer"
-            href="https://www.antgroup.com"
+            href="#"
           >
             My Account
           </a>
@@ -138,7 +138,7 @@ const DashboardLayout = () => {
           <a
             target="_blank"
             rel="noopener noreferrer"
-            href="https://www.aliyun.com"
+            href="#"
           >
             Change Password
           </a>

@@ -5,13 +5,12 @@ import { Link, Navigate } from "react-router-dom";
 import axios from "axios";
 import { AppContext } from "../../utils/context";
 import ErrorAlert from "../../component/ui/ErrorAlert";
-import { storeUserProfileData } from "../../utils/helper";
+import "./style.css";
 
 const SignInPage = () => {
   const { setUser, loading, setLoading } = useContext(AppContext);
 
   const onFinish = async (values) => {
-    
     setLoading(true);
     try {
       const res = await axios.post("/api/auth/login", {
@@ -31,9 +30,8 @@ const SignInPage = () => {
       setLoading(false);
 
       return <Navigate to="/" replace />;
-
     } catch (err) {
-      console.log(err)
+      console.log(err);
       await ErrorAlert(
         "Login Failed",
         err.response?.data?.error.message || "An error occurred during logout."
@@ -44,7 +42,7 @@ const SignInPage = () => {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen bg-gray-100">
+    <div className=" banner flex justify-center items-center h-scree">
       <Form
         name="login-form"
         initialValues={{ remember: true }}
@@ -92,8 +90,8 @@ const SignInPage = () => {
 
         <div className="text-center">
           <p>
-            Don&apost have an account?{" "}
-            <Link to="/auth/signup" className="text-blue-500">
+            Don't have an account?{" "}
+            <Link to="/account/signup" className="text-blue-500">
               Sign Up
             </Link>
           </p>
