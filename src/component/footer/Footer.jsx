@@ -16,7 +16,7 @@ function Footer() {
           <div className="w-full md:w-1/3 lg:w-1/4 mb-8">
             <h1 className="text-3xl font-bold mb-4">Angkor Restaurant</h1>
             <p className="mb-2">st. 271,Meanchey, Phnom Penh, Cambodia</p>
-            <p>Phone: <a href="tel:5551234567" className="text-gray-300 hover:text-white">010-987-001</a></p>
+           
           </div>
 
           

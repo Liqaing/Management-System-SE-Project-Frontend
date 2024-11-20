@@ -9,6 +9,7 @@ import {
   Space,
   message,
   Popconfirm,
+  Tag,
 } from "antd";
 import { request } from "../../utils/request";
 import { formatDateClient } from "../../utils/helper";
@@ -68,7 +69,7 @@ const EmployeePageDash = () => {
   const getList = async () => {
     setLoading(true); // Start loading
     try {
-      const res = await request("/api/category", "GET", {});
+      const res = await request("/api/user?filter[roleName]=ADMIN", "GET", {});
       console.log(res);
       setCategoryList(res.data.value);
     } catch (error) {
@@ -88,14 +89,26 @@ const EmployeePageDash = () => {
       },
     },
     {
-      title: "Name",
-      key: "name",
-      dataIndex: "categoryName",
+      title: "UserName",
+      key: "username",
+      dataIndex: "username",
     },
     {
-      title: "Description",
-      key: "description",
-      dataIndex: "description",
+      title: "Telephone",
+      key: "telephone",
+      dataIndex: "telephone",
+    },
+    {
+      title: "Role",
+      key: "roleName",
+      render: (text, record, index) => {
+        const color = "geekblue";
+        return (
+          <Tag color={color} key={text}>
+            {record.role.roleName}
+          </Tag>
+        );
+      }
     },
     {
       title: "Create At",
@@ -192,11 +205,11 @@ const EmployeePageDash = () => {
     <MainPageDash loading={loading}>
       <div className="flex justify-between">
         <div>
-          <div className="text-lg text-gray-700">Category</div>
+          <div className="text-lg text-gray-700">Employee</div>
           <div className="text-gray-400">{categoryList.length} items</div>
         </div>
         <Button size="middle" type="primary" onClick={showModal}>
-          Add Category
+          Add Employee 
         </Button>
       </div>
       <Table
@@ -209,7 +222,7 @@ const EmployeePageDash = () => {
       {/* Start Modal Form Insert */}
 
       <Modal
-        title={categoryId == null ? "Add Category" : "Edit Category"}
+        title={categoryId == null ? "Add Employee" : "Edit Employee"}
         visible={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}

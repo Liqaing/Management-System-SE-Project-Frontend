@@ -9,6 +9,7 @@ import {
   Space,
   message,
   Popconfirm,
+  Tag,
 } from "antd";
 import { request } from "../../utils/request";
 import { formatDateClient } from "../../utils/helper";
@@ -33,15 +34,7 @@ const CustomerPageDash = () => {
     getList();
   }, []);
 
-  const handleEdit = (items) => {
-    console.log(items);
-    setIsModalOpen(true);
-    setCategoryId(items.id);
-    form.setFieldsValue({
-      name: items.categoryName,
-      description: items.description,
-    });
-  };
+  
   const handleDelete = async (record) => {
     setLoading(true);
     try {
@@ -68,7 +61,7 @@ const CustomerPageDash = () => {
   const getList = async () => {
     setLoading(true); // Start loading
     try {
-      const res = await request("/api/category", "GET", {});
+      const res = await request("/api/user?filter[roleName]=USER", "GET", {});
       console.log(res);
       setCategoryList(res.data.value);
     } catch (error) {
@@ -88,14 +81,26 @@ const CustomerPageDash = () => {
       },
     },
     {
-      title: "Name",
-      key: "name",
-      dataIndex: "categoryName",
+      title: "UserName",
+      key: "username",
+      dataIndex: "username",
     },
     {
-      title: "Description",
-      key: "description",
-      dataIndex: "description",
+      title: "Telephone",
+      key: "telephone",
+      dataIndex: "telephone",
+    },
+    {
+      title: "Role",
+      key: "roleName",
+      render: (text, record, index) => {
+        const color = "geekblue";
+        return (
+          <Tag color={color} key={text}>
+            {record.role.roleName}
+          </Tag>
+        );
+      }
     },
     {
       title: "Create At",
@@ -111,13 +116,7 @@ const CustomerPageDash = () => {
         return (
           <div>
             <Space>
-              <Button
-                size="small"
-                type="primary"
-                onClick={() => handleEdit(record)}
-              >
-                <LiaEdit />
-              </Button>
+              
 
               <Popconfirm
                 title="Delete the task"
@@ -143,61 +142,16 @@ const CustomerPageDash = () => {
     },
   ];
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
-  const handleOk = () => {
-    setIsModalOpen(false);
-  };
-  const handleCancel = () => {
-    setIsModalOpen(false);
-    setCategoryId(null);
-    form.resetFields();
-  };
-
-  const onFinish = async (items) => {
-    console.log(items);
-
-    const payload = {
-      categoryName: items.name,
-      description: items.description,
-    };
-
-    setLoading(true);
-    try {
-      let res;
-      if (categoryId == null) {
-        res = await request("/api/category", "POST", payload);
-      } else {
-        res = await request(`/api/category/${categoryId}`, "PUT", payload);
-      }
-
-      console.log(res);
-      if (res.success === true) {
-        message.success(res.data.message);
-        form.resetFields();
-        setIsModalOpen(false);
-        getList();
-      }
-    } catch (error) {
-      console.error("An error occurred:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  
 
   return (
     <MainPageDash loading={loading}>
       <div className="flex justify-between">
         <div>
-          <div className="text-lg text-gray-700">Category</div>
+          <div className="text-lg text-gray-700">Customer</div>
           <div className="text-gray-400">{categoryList.length} items</div>
         </div>
-        <Button size="middle" type="primary" onClick={showModal}>
-          Add Category
-        </Button>
+        
       </div>
       <Table
         className="mt-2"
@@ -205,52 +159,6 @@ const CustomerPageDash = () => {
         columns={columns}
         size="small"
       />
-
-      {/* Start Modal Form Insert */}
-
-      <Modal
-        title={categoryId == null ? "Add Category" : "Edit Category"}
-        visible={isModalOpen}
-        onOk={handleOk}
-        onCancel={handleCancel}
-        maskClosable={false}
-        footer={null}
-      >
-        <Form layout="vertical" form={form} onFinish={onFinish}>
-          <Form.Item
-            label="Name"
-            name="name"
-            rules={[{ required: true, message: "Please input category name" }]}
-            className="mb-3"
-          >
-            <Input placeholder="Name" allowClear={true} />
-          </Form.Item>
-          <Form.Item
-            label="Description"
-            name="description"
-            rules={[{ required: true, message: "Please input description" }]}
-            className="mb-3"
-          >
-            <Input placeholder="Description" allowClear={true} />
-          </Form.Item>
-
-          <Form.Item className="mt-5">
-            <Space style={{ display: "flex", justifyContent: "right" }}>
-              <Button danger onClick={handleCancel}>
-                Cancel
-              </Button>
-              <Button danger onClick={() => form.resetFields()}>
-                Clear
-              </Button>
-              <Button type="primary" htmlType="submit">
-                {categoryId == null ? "Save" : "Edit"}
-              </Button>
-            </Space>
-          </Form.Item>
-        </Form>
-      </Modal>
-
-      {/* End Modal Form Insert */}
     </MainPageDash>
   );
 };

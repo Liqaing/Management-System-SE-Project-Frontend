@@ -23,9 +23,9 @@ const RestaurantCart = () => {
       </div>
       <div className="p-4 textPart lg:flex w-full justify-between">
         <div className="space-y-1">
-          <p className="font-semibold text-lg">Indian Fast Food</p>
+          <p className="font-semibold text-lg">Khmer Fast Food</p>
           <p className="text-gray-500 text-sm">
-            Craving it all? Dive into our global fla...
+           Lorem ipsum dolor sit amet consectetur adipisicing elit.
           </p>
         </div>
         <div>
