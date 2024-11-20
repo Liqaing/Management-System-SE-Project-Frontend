@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom"; // Import useLocation
 import logo from "../../assets/logo/logo.png";
 import userPic from "../../assets/logo/user.png";
 import { FaExchangeAlt, FaUserAlt } from "react-icons/fa";
-import { DownOutlined } from "@ant-design/icons";
+import { DownOutlined, LogoutOutlined } from "@ant-design/icons";
 import {
   DesktopOutlined,
   FileOutlined,
@@ -46,7 +46,6 @@ const items = [
   getItem("Dashboar", "/dashboard", <PieChartOutlined />),
 
   getItem("POS", "/dashboard/pos", <DesktopOutlined />),
-  getItem("Order", "/dashboard/order", <DesktopOutlined />),
 
   getItem("Product", "/dashboard/product", <UserOutlined />, [
     getItem("Category", "/dashboard/product/category", <DesktopOutlined />),
@@ -77,6 +76,7 @@ const items = [
       <FileOutlined />
     ),
   ]),
+  getItem("Logout", "/dashboard/logout", <LogoutOutlined />),
 ];
 
 const DashboardLayout = () => {
@@ -158,7 +158,13 @@ const DashboardLayout = () => {
   ];
 
   const handleChangeMenu = (item) => {
-    navigate(item.key);
+    console.log('item ----------',item)
+    if(item.key == "/dashboard/logout"){
+      handleLogout();
+    }else{
+      navigate(item.key);
+    }
+    
   };
 
   // Dynamic Breadcrumb Items
@@ -202,8 +208,8 @@ const DashboardLayout = () => {
               className="rounded-full mt-2"
               style={{ width: 45, height: 45 }}
             />
-            <div className="font-bold ml-2 text-lg mt-4 text-gray-600">
-              RESTAURANT
+            <div className="pacifico-regular font-bold ml-2 text-lg mt-4 text-gray-600">
+              Angkor Restaurant
             </div>
           </div>
           <div>
@@ -214,10 +220,9 @@ const DashboardLayout = () => {
                 }}
               >
                 <a onClick={(e) => e.preventDefault()}>
-                  <Space className="bg-blue-100 rounded-lg h-[40px] p-3">
+                  <Space className="bg-gray-100 rounded-lg h-[40px] p-3">
                     <img src={userPic} className="w-[30px]" />
-                    <span className="font-semibold">{user?.username}</span>
-                    {/* <DownOutlined /> */}
+                    <span className="font-semibold pacifico-regular">{user?.username}</span>
                   </Space>
                 </a>
               </Dropdown>

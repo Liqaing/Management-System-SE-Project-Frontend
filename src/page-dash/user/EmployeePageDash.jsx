@@ -10,6 +10,7 @@ import {
   message,
   Popconfirm,
   Tag,
+  Select,
 } from "antd";
 import { request } from "../../utils/request";
 import { formatDateClient } from "../../utils/helper";
@@ -108,7 +109,7 @@ const EmployeePageDash = () => {
             {record.role.roleName}
           </Tag>
         );
-      }
+      },
     },
     {
       title: "Create At",
@@ -209,7 +210,7 @@ const EmployeePageDash = () => {
           <div className="text-gray-400">{categoryList.length} items</div>
         </div>
         <Button size="middle" type="primary" onClick={showModal}>
-          Add Employee 
+          Add Employee
         </Button>
       </div>
       <Table
@@ -231,20 +232,47 @@ const EmployeePageDash = () => {
       >
         <Form layout="vertical" form={form} onFinish={onFinish}>
           <Form.Item
-            label="Name"
-            name="name"
-            rules={[{ required: true, message: "Please input category name" }]}
+            label="Username"
+            name="username"
+            rules={[{ required: true, message: "Please input username" }]}
             className="mb-3"
           >
-            <Input placeholder="Name" allowClear={true} />
+            <Input placeholder="Username" allowClear={true} />
           </Form.Item>
+
           <Form.Item
-            label="Description"
-            name="description"
-            rules={[{ required: true, message: "Please input description" }]}
+            label="Telephone"
+            name="telephone"
+            rules={[{ required: true, message: "Please input telephone" }]}
             className="mb-3"
           >
-            <Input placeholder="Description" allowClear={true} />
+            <Input placeholder="Telephone" allowClear={true} />
+          </Form.Item>
+
+          <Form.Item
+            label="Password"
+            name="password"
+            rules={[{ required: true, message: "Please input password" }]}
+            className="mb-3"
+          >
+            <Input
+              defaultValue="123456"
+              placeholder="Password"
+              allowClear
+              readOnly
+            />
+          </Form.Item>
+
+          <Form.Item
+            label="Role"
+            name="role"
+            rules={[{ required: true, message: "Please select role" }]}
+          >
+            <Select placeholder="Select a role">
+              <Select.Option value="ADMIN">Admin</Select.Option>
+              <Select.Option value="STAFF">Staff</Select.Option>
+              <Select.Option value="USER">User</Select.Option>
+            </Select>
           </Form.Item>
 
           <Form.Item className="mt-5">

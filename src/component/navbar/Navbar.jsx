@@ -11,14 +11,14 @@ import logo from "../../assets/logo/logo.png";
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const { user} = useContext(AppContext);
+  const { user } = useContext(AppContext);
 
-  console.log('user --------- ', user);
+  console.log("user --------- ", user);
 
   const handleAvatarClick = () => {
-    if(user?.role === "ADMIN"){
+    if (user?.role === "ADMIN") {
       navigate("/dashboard");
-    }else{
+    } else {
       navigate("/my-profile");
     }
   };
