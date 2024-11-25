@@ -152,7 +152,7 @@ const ProfileLayout = () => {
           </Content>
         </Layout>
       </Content>
-      <Footer />
+      {/* <Footer /> */}
     </Layout>
   );
 };

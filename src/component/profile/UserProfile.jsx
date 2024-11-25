@@ -1,9 +1,30 @@
-import React from "react";
+import React, { useContext } from "react";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { Button } from "@mui/material";
+import axios from "axios";
+import ErrorAlert from "../ui/ErrorAlert";
+import { useNavigate } from "react-router-dom";
+import { AppContext } from "../../utils/context";
 
 const UserProfile = () => {
-  const handleLogout = () => {};
+  const navigate = useNavigate();
+  const { user, loading, setUser } = useContext(AppContext);
+
+  const handleLogout = async () => {
+    axios
+      .post("/api/auth/logout")
+      .then(() => {
+        navigate("/");
+        setUser(null);
+      })
+      .catch(async (err) => {
+        await ErrorAlert(
+          "Logout Failed",
+          err.response?.data?.error.message || "An error occurred during login."
+        );
+      });
+  };
+
 
   return (
     <div className="min-h-[80vh] flex flex-col justify-center items-center text-center">

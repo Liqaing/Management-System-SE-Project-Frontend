@@ -29,6 +29,7 @@ import Favorites from "./component/profile/Favorites.jsx";
 import Address from "./component/profile/Address.jsx";
 import Payment from "./component/profile/Payment.jsx";
 import Events from "./component/profile/Events.jsx";
+import UserProfile from "./component/profile/UserProfile.jsx";
 
 const ProtectedRoute = ({ user }) => {
   if (user === null) return <Navigate to="/auth/signin" />;
@@ -68,7 +69,7 @@ const App = () => {
         </Route>
 
         <Route path="/my-profile" element={<ProfileLayout />}>
-          <Route index element={<Orders />} />
+          <Route index element={<UserProfile />} />
           <Route path="order" element={<Orders />} />
           <Route path="favorites" element={<Favorites />} />
           <Route path="address" element={<Address />} />
