@@ -9,7 +9,7 @@ import {
 
 function Footer() {
   return (
-    <footer className="bg-gray-900 text-gray-200">
+    <footer className="bg-gray-950 text-gray-200">
       <div className="container mx-auto px-6 py-10">
         <div className="flex flex-wrap justify-between items-start">
           {/* Branding and Address Section */}

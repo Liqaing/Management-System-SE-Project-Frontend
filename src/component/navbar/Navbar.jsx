@@ -24,7 +24,7 @@ const Navbar = () => {
   };
 
   return (
-    <div className="px-5 sticky top-0 z-50 py-[0.5rem] bg-[#e91e63] lg:px-20 flex justify-between">
+    <div className="px-5 sticky top-0 z-50 py-[0.5rem] bg-[#071229] lg:px-20 flex justify-between">
       <div className="lg:mr-10 cursor-pointer flex items-center space-x-4">
         <li>
           <img src={logo} className="w-[50px] h-[50px] rounded-full" />

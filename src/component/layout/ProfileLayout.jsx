@@ -13,11 +13,11 @@ import EventIcon from "@mui/icons-material/Event";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { Breadcrumb, Layout, Menu, theme, Button } from "antd";
 import { Outlet, useNavigate } from "react-router-dom";
-import Navbar from "../Navbar/Navbar";
 import Footer from "../footer/Footer";
 import axios from "axios";
 import ErrorAlert from "../ui/ErrorAlert";
 import { AppContext } from "../../utils/context";
+import Navbar from "../navbar/Navbar";
 
 const { Header, Content, Sider } = Layout;
 
@@ -152,7 +152,7 @@ const ProfileLayout = () => {
           </Content>
         </Layout>
       </Content>
-      {/* <Footer /> */}
+      <Footer />
     </Layout>
   );
 };
