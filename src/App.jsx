@@ -30,6 +30,7 @@ import Address from "./component/profile/Address.jsx";
 import Payment from "./component/profile/Payment.jsx";
 import Events from "./component/profile/Events.jsx";
 import UserProfile from "./component/profile/UserProfile.jsx";
+import CouponPage from "./page-dash/coupon/CouponPage.jsx";
 
 const ProtectedRoute = ({ user }) => {
   if (user === null) return <Navigate to="/auth/signin" />;
@@ -91,6 +92,8 @@ const App = () => {
             <Route path="product/productList" element={<ProductPageDash />} />
             <Route path="user/employee" element={<EmployeePageDash />} />
             <Route path="user/customer" element={<CustomerPageDash />} />
+
+            <Route path="system/coupon" element={<CouponPage />} />
           </Route>
         </Route>
 

@@ -1,5 +1,5 @@
 import { Avatar, Badge, IconButton } from "@mui/material";
-import React, { useContext } from "react";
+import { useContext } from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { pink } from "@mui/material/colors";

@@ -2,8 +2,8 @@ import { useContext, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom"; // Import useLocation
 import logo from "../../assets/logo/logo.png";
 import userPic from "../../assets/logo/user.png";
-import { FaExchangeAlt, FaUserAlt } from "react-icons/fa";
-import { DownOutlined, LogoutOutlined } from "@ant-design/icons";
+import { FaExchangeAlt } from "react-icons/fa";
+import { LogoutOutlined } from "@ant-design/icons";
 import {
   DesktopOutlined,
   FileOutlined,
@@ -11,21 +11,9 @@ import {
   TeamOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import {
-  Avatar,
-  Badge,
-  Breadcrumb,
-  Dropdown,
-  Input,
-  Layout,
-  Menu,
-  Space,
-  theme,
-} from "antd";
+import { Breadcrumb, Dropdown, Layout, Menu, Space, theme } from "antd";
 import { FiLogOut } from "react-icons/fi";
 import { Outlet, useNavigate } from "react-router-dom";
-import { request } from "../../utils/request";
-import { getUser } from "../../utils/helper";
 import { AppContext } from "../../utils/context";
 import { MdManageAccounts } from "react-icons/md";
 import axios from "axios";
@@ -58,6 +46,7 @@ const items = [
   ]),
 
   getItem("System", "/dashboard/system", <UserOutlined />, [
+    getItem("Coupon", "/dashboard/system/coupon"),
     getItem("Order Status", "/dashboard/system/orderStatus"),
     getItem("Order Payment", "/dashboard/system/orderPayment"),
     getItem("Province", "/dashboard/system/province"),
@@ -120,11 +109,7 @@ const DashboardLayout = () => {
       label: (
         <>
           <MdManageAccounts className="size-5 mr-1" />
-          <a
-            target="_blank"
-            rel="noopener noreferrer"
-            href="#"
-          >
+          <a target="_blank" rel="noopener noreferrer" href="#">
             My Account
           </a>
         </>
@@ -135,11 +120,7 @@ const DashboardLayout = () => {
       label: (
         <>
           <FaExchangeAlt className="size-4 mr-1" />
-          <a
-            target="_blank"
-            rel="noopener noreferrer"
-            href="#"
-          >
+          <a target="_blank" rel="noopener noreferrer" href="#">
             Change Password
           </a>
         </>
@@ -158,13 +139,12 @@ const DashboardLayout = () => {
   ];
 
   const handleChangeMenu = (item) => {
-    console.log('item ----------',item)
-    if(item.key == "/dashboard/logout"){
+    console.log("item ----------", item);
+    if (item.key == "/dashboard/logout") {
       handleLogout();
-    }else{
+    } else {
       navigate(item.key);
     }
-    
   };
 
   // Dynamic Breadcrumb Items
@@ -222,7 +202,9 @@ const DashboardLayout = () => {
                 <a onClick={(e) => e.preventDefault()}>
                   <Space className="bg-gray-100 rounded-lg h-[40px] p-3">
                     <img src={userPic} className="w-[30px]" />
-                    <span className="font-semibold pacifico-regular">{user?.username}</span>
+                    <span className="font-semibold pacifico-regular">
+                      {user?.username}
+                    </span>
                   </Space>
                 </a>
               </Dropdown>
