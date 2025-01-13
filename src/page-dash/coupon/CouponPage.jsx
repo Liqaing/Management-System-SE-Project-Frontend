@@ -43,13 +43,13 @@ const CouponPage = () => {
     getList();
   }, []);
 
-  const handleEdit = (items) => {
+  const handleEdit = (item) => {
     setIsModalOpen(true);
-    setCouponId(items.id);
+    setCouponId(item.id);
     form.setFieldsValue({
-      ...items,
-      effectiveDate: moment(items.effectiveDate),
-      expireDate: moment(items.expireDate),
+      ...item,
+      effectiveDate: moment(item.effectiveDate),
+      expireDate: moment(item.expireDate),
     });
   };
 
@@ -107,28 +107,28 @@ const CouponPage = () => {
     {
       title: " Effective Date",
       key: "effectiveDate",
-      render: (text) => {
-        return formatDateClient(text);
+      render: (item) => {
+        return formatDateClient(item.effectiveDate);
       },
     },
     {
       title: "Expire Date",
       key: "expireDate",
-      render: (text) => {
-        return formatDateClient(text);
+      render: (item) => {
+        return formatDateClient(item.expireDate);
       },
     },
     {
       title: "Action",
       key: "action",
-      render: (record) => {
+      render: (item) => {
         return (
           <div>
             <Space>
               <Button
                 size="small"
                 type="primary"
-                onClick={() => handleEdit(record)}
+                onClick={() => handleEdit(item)}
               >
                 <LiaEdit />
               </Button>
@@ -137,7 +137,7 @@ const CouponPage = () => {
                 title="Delete the task"
                 description="Are you sure to delete?"
                 onCancel={cancel}
-                onConfirm={() => handleDelete(record)}
+                onConfirm={() => handleDelete(item)}
                 icon={
                   <QuestionCircleOutlined
                     style={{
@@ -254,6 +254,10 @@ const CouponPage = () => {
                 message: "Please input the discount percentage",
               },
               {
+                max: 100,
+                message: "Please input valid discount percentage",
+              },
+              {
                 type: "number",
                 message: "Must be a positive number",
                 transform: (value) => +value,
@@ -285,6 +289,10 @@ const CouponPage = () => {
               <Select.Option value="Counter">Counter</Select.Option>
             </Select>
           </Form.Item>
+
+          {/* <Form.Item>
+            <DatePicker.RangePicker />
+          </Form.Item> */}
 
           <Form.Item
             label="Effective Date"
