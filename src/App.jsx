@@ -31,6 +31,7 @@ import Payment from "./component/profile/Payment.jsx";
 import Events from "./component/profile/Events.jsx";
 import UserProfile from "./component/profile/UserProfile.jsx";
 import CouponPage from "./page-dash/coupon/CouponPage.jsx";
+import MainPageDash from "./page-dash/mainpage/MainPageDash.jsx";
 
 const ProtectedRoute = ({ user }) => {
   if (user === null) return <Navigate to="/auth/signin" />;

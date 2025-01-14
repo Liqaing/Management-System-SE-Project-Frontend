@@ -1,21 +1,29 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
+  Avatar,
   Button,
+  Card,
   Col,
   Divider,
   Input,
   InputNumber,
-  message,
   Row,
   Select,
   Space,
 } from "antd";
 import MainPageDash from "../mainpage/MainPageDash";
 import styles from "./styles.module.css";
+import { request } from "../../utils/request";
+import {
+  EditOutlined,
+  EllipsisOutlined,
+  SettingOutlined,
+} from "@ant-design/icons";
+import Meta from "antd/es/card/Meta";
 
 const POS = () => {
   const [loading, setLoading] = useState(false);
-  const [proList, setProList] = useState([]);
+  const [proListByCategory, setProListByCategory] = useState([]);
   const [txtSearchId, setTxtSearchId] = useState("");
   const [subTotal, setSubTotal] = useState(0);
   const [total, setTotal] = useState(0);
@@ -30,8 +38,22 @@ const POS = () => {
   const [paymentMethodId, setPaymentMethodId] = useState();
   const [orderStatusId, setOrderStatusId] = useState();
 
+  const getProduct = async () => {
+    const res = await request(
+      "/api/category",
+      "GET",
+      {},
+      {
+        "include[products]": true,
+      }
+    );
+    setProListByCategory(res.data.value);
+    console.log(res.data.value);
+  };
+
   useEffect(() => {
     // Add any necessary side effects here
+    getProduct();
   }, []);
 
   const handleCheckout = () => {
@@ -51,23 +73,50 @@ const POS = () => {
             />
           </div>
 
-          {proList.map((item, index) => (
-            <div className={styles.rowProduct} key={index}>
-              <div>
-                <div className={styles.txtID}>ID: {item.product_id}</div>
-                <div className={styles.txtName}>Name: {item.name}</div>
-                <div className={styles.txtDes}>
-                  Description: {item.description}
-                </div>
-                <div className={styles.txtQty}>Stock: {item.quantity}</div>
-              </div>
-              <div>
-                <div className={styles.txtPrice}>
-                  Price: ${item.price.toFixed(2)}
-                </div>
-                <div className={styles.txtQty}>Qty: {item.qty}</div>
-              </div>
-            </div>
+          {proListByCategory.map((category, index) => (
+            <Row key={index}>
+              {category.product.map((product, proIndex) => (
+                <Card span={6} key={proIndex}>
+                  cover=
+                  {
+                    <img
+                      alt="example"
+                      src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
+                    />
+                  }
+                  actions=
+                  {[
+                    <SettingOutlined key="setting" />,
+                    <EditOutlined key="edit" />,
+                    <EllipsisOutlined key="ellipsis" />,
+                  ]}
+                  <Meta
+                    avatar={
+                      <Avatar src="https://api.dicebear.com/7.x/miniavs/svg?seed=8" />
+                    }
+                    title={product.productName}
+                    description={product.productName}
+                  />
+                </Card>
+              ))}
+            </Row>
+            // <div className={styles.rowProduct} key={index}>
+            //   <div>
+            //     <div className={styles.txtID}>ID: {item.product_id}</div>
+            //     <div className={styles.txtName}>Name: {item.name}</div>
+            //     <div className={styles.txtDes}>
+            //       Description: {item.description}
+            //     </div>
+            //     <div className={styles.txtQty}>Stock: {item.quantity}</div>
+            //   </div>
+            //   <div>
+            //     <div className={styles.txtPrice}>
+            //       {/* Price: ${item.price.toFixed(2)} */}
+            //       item.price
+            //     </div>
+            //     <div className={styles.txtQty}>Qty: {item.qty}</div>
+            //   </div>
+            // </div>
           ))}
         </Col>
         <Col className={styles.contain_grid2} span={6}>
