@@ -11,12 +11,13 @@ import {
   Popconfirm,
   DatePicker,
   Select,
+  Descriptions,
 } from "antd";
 import { request } from "../../utils/request";
 import { formatDateClient } from "../../utils/helper";
 import { LiaEdit } from "react-icons/lia";
 import { MdOutlineDelete } from "react-icons/md";
-import { QuestionCircleOutlined } from "@ant-design/icons";
+import { EyeOutlined, QuestionCircleOutlined } from "@ant-design/icons";
 import moment from "moment";
 
 const CouponPage = () => {
@@ -26,6 +27,10 @@ const CouponPage = () => {
   //track event edit
   const [couponId, setCouponId] = useState();
   const [form] = Form.useForm();
+
+  // Show detail
+  const [selectedCoupon, setSelectedCoupon] = useState(null);
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
 
   const getList = async () => {
     setLoading(true);
@@ -73,6 +78,16 @@ const CouponPage = () => {
   const cancel = (e) => {
     console.log(e);
     // message.error("Click on No");
+  };
+
+  const showDetailModal = (coupon) => {
+    setSelectedCoupon(coupon);
+    setIsDetailModalOpen(true);
+  };
+
+  const closeDetailModal = () => {
+    setSelectedCoupon(null);
+    setIsDetailModalOpen(false);
   };
 
   const columns = [
@@ -125,6 +140,14 @@ const CouponPage = () => {
         return (
           <div>
             <Space>
+              <Button
+                size="small"
+                type="primary"
+                onClick={() => showDetailModal(item)}
+              >
+                <EyeOutlined />
+              </Button>
+
               <Button
                 size="small"
                 type="primary"
@@ -351,6 +374,48 @@ const CouponPage = () => {
             </Space>
           </Form.Item>
         </Form>
+      </Modal>
+
+      <Modal
+        title={`Coupon: ${selectedCoupon ? selectedCoupon.couponCode : ""}`}
+        open={isDetailModalOpen}
+        onCancel={closeDetailModal}
+        footer={[
+          <Button key="close" onClick={closeDetailModal}>
+            Close
+          </Button>,
+        ]}
+      >
+        {selectedCoupon && (
+          <div>
+            <Descriptions
+              size="small"
+              column={1}
+              labelStyle={{
+                fontSize: "0.8rem",
+                marginBottom: "0",
+                width: "30%",
+              }}
+              className="mt-5"
+            >
+              <Descriptions.Item label="Coupon Type">
+                {selectedCoupon.couponType}
+              </Descriptions.Item>
+              <Descriptions.Item label="Discount Percentage">
+                {selectedCoupon.DiscountPercentage}
+              </Descriptions.Item>
+              <Descriptions.Item label="Effective Date">
+                {formatDateClient(selectedCoupon.effectiveDate)}
+              </Descriptions.Item>
+              <Descriptions.Item label="Expire Date">
+                {formatDateClient(selectedCoupon.expireDate)}
+              </Descriptions.Item>
+              <Descriptions.Item label="Limit Usange">
+                {selectedCoupon.limitUsange}
+              </Descriptions.Item>
+            </Descriptions>
+          </div>
+        )}
       </Modal>
     </MainPageDash>
   );
