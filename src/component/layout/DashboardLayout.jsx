@@ -162,7 +162,7 @@ const DashboardLayout = () => {
     });
 
   return (
-    <Layout style={{ minHeight: "100vh" }}>
+    <Layout style={{ height: "100vh", margin: 0, padding: 0 }}>
       <Sider collapsible collapsed={collapsed} onCollapse={setCollapsed}>
         <div className="demo-logo-vertical" />
         <Menu
@@ -173,7 +173,7 @@ const DashboardLayout = () => {
           items={items}
         />
       </Sider>
-      <Layout>
+      <Layout style={{ height: "99%", margin: 0, padding: 0 }}>
         <Header
           style={{
             padding: "0 40px",
@@ -218,8 +218,8 @@ const DashboardLayout = () => {
           </Breadcrumb>
           <div
             style={{
+              height: "100%",
               padding: 24,
-              minHeight: 360,
               background: colorBgContainer,
               borderRadius: borderRadiusLG,
             }}
