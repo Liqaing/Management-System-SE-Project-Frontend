@@ -6,6 +6,7 @@ import {
   Col,
   Divider,
   Flex,
+  Grid,
   Input,
   InputNumber,
   Row,
@@ -16,13 +17,7 @@ import {
 import MainPageDash from "../mainpage/MainPageDash";
 import styles from "./styles.module.css";
 import { request } from "../../utils/request";
-import {
-  EditOutlined,
-  EllipsisOutlined,
-  SettingOutlined,
-} from "@ant-design/icons";
-import Meta from "antd/es/card/Meta";
-import { Content, Footer } from "antd/es/layout/layout";
+import ProductCard from "./ProductCard";
 
 const POS = () => {
   const [loading, setLoading] = useState(false);
@@ -47,7 +42,7 @@ const POS = () => {
       "GET",
       {},
       {
-        "include[products]": true,
+        "include[product]": true,
       }
     );
     setProListByCategory(res.data.value);
@@ -91,49 +86,13 @@ const POS = () => {
         </div>
 
         {proListByCategory.map((category, index) => (
-          <div key={index}>
+          <Row key={index} gutter={16}>
             {category.product.map((product, proIndex) => (
-              <div span={6} key={proIndex}>
-                cover=
-                {
-                  <img
-                    alt="example"
-                    src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
-                  />
-                }
-                actions=
-                {[
-                  <SettingOutlined key="setting" />,
-                  <EditOutlined key="edit" />,
-                  <EllipsisOutlined key="ellipsis" />,
-                ]}
-                <Meta
-                  avatar={
-                    <Avatar src="https://api.dicebear.com/7.x/miniavs/svg?seed=8" />
-                  }
-                  title={product.productName}
-                  description={product.productName}
-                />
-              </div>
+              <Col span={8}>
+                <ProductCard key={proIndex} product={product} />
+              </Col>
             ))}
-          </div>
-          // <div className={styles.rowProduct} key={index}>
-          //   <div>
-          //     <div className={styles.txtID}>ID: {item.product_id}</div>
-          //     <div className={styles.txtName}>Name: {item.name}</div>
-          //     <div className={styles.txtDes}>
-          //       Description: {item.description}
-          //     </div>
-          //     <div className={styles.txtQty}>Stock: {item.quantity}</div>
-          //   </div>
-          //   <div>
-          //     <div className={styles.txtPrice}>
-          //       {/* Price: ${item.price.toFixed(2)} */}
-          //       item.price
-          //     </div>
-          //     <div className={styles.txtQty}>Qty: {item.qty}</div>
-          //   </div>
-          // </div>
+          </Row>
         ))}
       </Col>
       <Col className={styles.contain_grid2} span={6}>

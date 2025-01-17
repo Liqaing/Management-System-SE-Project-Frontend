@@ -228,9 +228,9 @@ const DashboardLayout = () => {
           </div>
         </Content>
 
-        <Footer style={{ textAlign: "center" }}>
+        {/* <Footer style={{ textAlign: "center" }}>
           ©RUPP - {new Date().getFullYear()}
-        </Footer>
+        </Footer> */}
       </Layout>
     </Layout>
   );
