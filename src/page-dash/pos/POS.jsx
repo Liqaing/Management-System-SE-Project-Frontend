@@ -60,41 +60,38 @@ const POS = () => {
 
   return (
     // <MainPageDash loading={loading}>
-    <div className="flex h-full w-full overflow-hidden">
-      <Tabs
-        defaultActiveKey="1"
-        tabPosition="left"
-        className="h-full"
-        items={new Array(30).fill(null).map((_, i) => {
-          const id = String(i);
-          return {
-            label: `Tab-${id}`,
-            key: id,
-            disabled: i === 28,
-            // children: `Content of tab ${id}`,
-          };
-        })}
-      />
-      <Col span={16} className="overflow-y-auto">
-        <div className={styles.containInputSearch}>
-          <Input.Search
-            placeholder="Enter product ID"
-            allowClear
-            value={txtSearchId}
-            onChange={(e) => setTxtSearchId(e.target.value)}
-          />
-        </div>
-
-        {proListByCategory.map((category, index) => (
-          <Row key={index} gutter={16}>
-            {category.product.map((product, proIndex) => (
-              <Col span={8}>
-                <ProductCard key={proIndex} product={product} />
-              </Col>
-            ))}
-          </Row>
-        ))}
+    <Flex className="flex h-full w-full overflow-hidden">
+      <Col span={18}>
+        <Tabs
+          defaultActiveKey="1"
+          tabPosition="left"
+          className="h-full"
+          items={proListByCategory.map((category, index) => ({
+            label: category.categoryName,
+            key: index,
+            children: (
+              <div>
+                <div className={styles.containInputSearch}>
+                  <Input.Search
+                    placeholder="Enter product ID"
+                    allowClear
+                    value={txtSearchId}
+                    onChange={(e) => setTxtSearchId(e.target.value)}
+                  />
+                </div>
+                <Row gutter={16}>
+                  {category.product.map((product, proIndex) => (
+                    <Col key={proIndex} span={8}>
+                      <ProductCard product={product} />
+                    </Col>
+                  ))}
+                </Row>
+              </div>
+            ),
+          }))}
+        />
       </Col>
+
       <Col className={styles.contain_grid2} span={6}>
         <div className={styles.txtMain}>Summary</div>
         <Space direction="vertical" className="mt-2">
@@ -169,7 +166,7 @@ const POS = () => {
         </Button>
       </Col>
       {/* </MainPageDash> */}
-    </div>
+    </Flex>
   );
 };
 
