@@ -13,11 +13,14 @@ import {
   Select,
   Space,
   Tabs,
+  Typography,
 } from "antd";
 import MainPageDash from "../mainpage/MainPageDash";
 import styles from "./styles.module.css";
 import { request } from "../../utils/request";
 import ProductCard from "./ProductCard";
+import ProductSummaryCard from "./ProductSummaryCard";
+import TextArea from "antd/es/input/TextArea";
 
 const POS = () => {
   const [loading, setLoading] = useState(false);
@@ -46,7 +49,6 @@ const POS = () => {
       }
     );
     setProListByCategory(res.data.value);
-    console.log(res.data.value);
   };
 
   useEffect(() => {
@@ -92,78 +94,97 @@ const POS = () => {
         />
       </Col>
 
-      <Col className={styles.contain_grid2} span={6}>
-        <div className={styles.txtMain}>Summary</div>
-        <Space direction="vertical" className="mt-2">
-          <Select
-            value={customerId}
-            onChange={(value) => setCustomerId(value)}
-            placeholder="Select Customer"
-            style={{ width: 200 }}
-          >
-            {customerList.map((item, index) => (
-              <Select.Option key={index} value={item.customer_id}>
-                {item.customer_id}-{item.firstname} {item.lastname}
-              </Select.Option>
-            ))}
-          </Select>
-          <Select
-            value={paymentMethodId}
-            onChange={(value) => setPaymentMethodId(value)}
-            placeholder="Select Payment Method"
-            style={{ width: 200 }}
-          >
-            {paymentMethodList.map((item, index) => (
-              <Select.Option key={index} value={item.payment_method_id}>
-                {item.payment_method_id}-{item.name}
-              </Select.Option>
-            ))}
-          </Select>
-          <Select
-            value={orderStatusId}
-            onChange={(value) => setOrderStatusId(value)}
-            placeholder="Select Order Status"
-            style={{ width: 200 }}
-          >
-            {orderStatusList.map((item, index) => (
-              <Select.Option key={index} value={item.order_status_id}>
-                {item.order_status_id}-{item.name}
-              </Select.Option>
-            ))}
-          </Select>
-        </Space>
-        <div className={styles.roleSummary}>
-          <div className="txtMain">Sub Total</div>
-          <div className={styles.txtPrice}>${subTotal.toFixed(2)}</div>
-        </div>
-        <div className={styles.roleSummary}>
-          <div className="txtMain">Discount</div>
+      <Col className="border p-2 border-gray-100 h-full" span={6}>
+        <Flex vertical className="h-full" gap={16}>
           <div>
-            <InputNumber
-              size="small"
-              value={discount}
-              onChange={(value) => setDiscount(value)}
-            />
+            <Typography.Title level={3} style={{ marginBottom: "0px" }}>
+              Summary
+            </Typography.Title>
+            <Flex gap={8} className="mt-2">
+              {/* <Select
+                value={customerId}
+                onChange={(value) => setCustomerId(value)}
+                placeholder="Customer"
+                size="small"
+              >
+                {customerList.map((item, index) => (
+                  <Select.Option key={index} value={item.customer_id}>
+                    {item.customer_id}-{item.firstname} {item.lastname}
+                  </Select.Option>
+                ))}
+              </Select> */}
+              <Select
+                value={paymentMethodId}
+                onChange={(value) => setPaymentMethodId(value)}
+                placeholder="Payment Method"
+                size="small"
+              >
+                {paymentMethodList.map((item, index) => (
+                  <Select.Option key={index} value={item.payment_method_id}>
+                    {item.payment_method_id}-{item.name}
+                  </Select.Option>
+                ))}
+              </Select>
+            </Flex>
           </div>
-        </div>
-        <div className={styles.roleSummary}>
-          <div className="txtMain">Tax</div>
-          <div>
-            <InputNumber
-              size="small"
-              value={tax}
-              onChange={(value) => setTax(value)}
-            />
-          </div>
-        </div>
-        <Divider />
-        <div className={styles.roleSummary}>
-          <div className="txtMain">Total</div>
-          <div className={styles.txtPrice}>${total.toFixed(2)}</div>
-        </div>
-        <Button block onClick={handleCheckout} type="primary">
-          Checkout
-        </Button>
+          <Flex vertical gap={4} className="h-full overflow-y-scroll">
+            {proListByCategory.map((category) =>
+              category.product.map((product, proIndex) => {
+                return <ProductSummaryCard key={proIndex} product={product} />;
+              })
+            )}
+          </Flex>
+          <Divider style={{ margin: "5px 0" }} />
+          <Flex vertical gap={8}>
+            <Flex justify="space-between">
+              <Typography.Text>Customer Tel</Typography.Text>
+              <Input
+                placeholder="010101231"
+                size="small"
+                style={{ width: "70%" }}
+              ></Input>
+            </Flex>
+            <Flex justify="space-between">
+              <Typography.Text>Coupon Code</Typography.Text>
+              <Space.Compact style={{ width: "70%" }}>
+                <Input placeholder="AA1611" size="small"></Input>
+                <Button size="small" type="primary">
+                  Apply
+                </Button>
+              </Space.Compact>
+            </Flex>
+            <Flex justify="space-between">
+              <Typography.Text>Remark</Typography.Text>
+              <TextArea
+                rows={2}
+                placeholder="Remark"
+                style={{ width: "70%" }}
+              ></TextArea>
+            </Flex>
+          </Flex>
+          <Divider style={{ margin: "5px 0" }} />
+          <Flex vertical gap={0} className="w-full">
+            <Flex justify="space-between" className="w-full">
+              <Typography.Text className="text-left">
+                Sub Total:
+              </Typography.Text>
+              <Flex justify="space-between" className="w-3/12">
+                <Typography.Text>$</Typography.Text>
+                <Typography.Text className="text-end">100</Typography.Text>
+              </Flex>
+            </Flex>
+            <Flex>
+              <div className={styles.roleSummary}>
+                <div className="txtMain">Total</div>
+                <div className={styles.txtPrice}>${total.toFixed(2)}</div>
+              </div>
+            </Flex>
+          </Flex>
+
+          <Button block onClick={handleCheckout} type="primary">
+            Checkout
+          </Button>
+        </Flex>
       </Col>
       {/* </MainPageDash> */}
     </Flex>

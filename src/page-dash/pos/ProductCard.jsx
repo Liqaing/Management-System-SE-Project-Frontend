@@ -1,28 +1,9 @@
-import {
-  EditOutlined,
-  EllipsisOutlined,
-  MinusOutlined,
-  PlusOutlined,
-  SettingOutlined,
-} from "@ant-design/icons";
-import {
-  Avatar,
-  Button,
-  Card,
-  Carousel,
-  Flex,
-  Image,
-  Input,
-  Typography,
-} from "antd";
-import Meta from "antd/es/card/Meta";
-import FormItemLabel from "antd/es/form/FormItemLabel";
-import Title from "antd/es/skeleton/Title";
+import { MinusOutlined, PlusOutlined } from "@ant-design/icons";
+import { Button, Card, Flex, Image, Typography } from "antd";
 import Paragraph from "antd/es/typography/Paragraph";
 import PropTypes from "prop-types";
 
 const ProductCard = ({ product }) => {
-  console.log(product.productImage);
   return (
     <Card size="small">
       <Flex vertical gap={8}>

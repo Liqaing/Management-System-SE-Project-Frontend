@@ -34,7 +34,7 @@ import CouponPage from "./page-dash/coupon/CouponPage.jsx";
 import MainPageDash from "./page-dash/mainpage/MainPageDash.jsx";
 
 const ProtectedRoute = ({ user }) => {
-  if (user === null) return <Navigate to="/auth/signin" />;
+  if (user === null) return <Navigate to="/account/signin" />;
   return <Outlet />;
 };
 
