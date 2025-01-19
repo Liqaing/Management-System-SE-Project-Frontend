@@ -3,7 +3,7 @@ import { Button, Card, Flex, Image, Typography } from "antd";
 import Paragraph from "antd/es/typography/Paragraph";
 import PropTypes from "prop-types";
 
-const ProductCard = ({ product }) => {
+const ProductCard = ({ product, addProductQty }) => {
   return (
     <Card size="small">
       <Flex vertical gap={8}>
@@ -64,7 +64,12 @@ const ProductCard = ({ product }) => {
               <MinusOutlined />
             </Button>
             <Button type="text">0</Button>
-            <Button shape="circle">
+            <Button
+              shape="circle"
+              onClick={() => {
+                addProductQty(product, 1);
+              }}
+            >
               <PlusOutlined />
             </Button>
           </Flex>
@@ -76,6 +81,7 @@ const ProductCard = ({ product }) => {
 
 ProductCard.propTypes = {
   product: PropTypes.object,
+  addProductQty: PropTypes.func,
 };
 
 export default ProductCard;

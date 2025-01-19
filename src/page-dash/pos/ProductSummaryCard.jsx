@@ -1,16 +1,17 @@
 import { MinusOutlined, PlusOutlined } from "@ant-design/icons";
-import { Button, Card, Divider, Flex, Image, Typography } from "antd";
-import Paragraph from "antd/es/skeleton/Paragraph";
+import { Button, Divider, Flex, Image, Typography } from "antd";
 import PropTypes from "prop-types";
 
-const ProductSummaryCard = ({ product }) => {
+const ProductSummaryCard = ({ orderProduct }) => {
+  console.log(orderProduct.product.id);
   return (
     <div>
       <Flex className="p-0" gap={16}>
         <div>
-          {product.productImage && product.productImage.length > 0 ? (
+          {orderProduct.product.productImage &&
+          orderProduct.product.productImage.length > 0 ? (
             <Image
-              src={product.productImage[0].imageUrl}
+              src={orderProduct.product.productImage[0].imageUrl}
               alt={"Product Image"}
               loading="lazy"
               width={50}
@@ -30,7 +31,7 @@ const ProductSummaryCard = ({ product }) => {
         </div>
         <Flex vertical className="w-full">
           <Typography.Text strong className="mb-0">
-            {product.productName}
+            {orderProduct.product.productName}
           </Typography.Text>
           <Flex
             justify="space-between"
@@ -38,15 +39,15 @@ const ProductSummaryCard = ({ product }) => {
             className="h-fit w-full m-0"
           >
             <Typography.Text type="secondary" className="mb-0">
-              $ {product.price}
+              $ {orderProduct.product.price}
             </Typography.Text>
 
-            <Flex gap={8} className="rounded-2xl h-fit bg-gray-200">
+            <Flex gap={8} className="rounded-2xl h-fit bg-gray-200 mr-4">
               <Button shape="circle" size="small">
                 <MinusOutlined />
               </Button>
               <Button type="text" size="small">
-                0
+                {orderProduct.orderQuantity}
               </Button>
               <Button shape="circle" size="small">
                 <PlusOutlined />
@@ -55,13 +56,13 @@ const ProductSummaryCard = ({ product }) => {
           </Flex>
         </Flex>
       </Flex>
-      <Divider style={{margin: "10px 0"}} />
+      <Divider style={{ margin: "10px 0" }} />
     </div>
   );
 };
 
 ProductSummaryCard.propTypes = {
-  product: PropTypes.object,
+  orderProduct: PropTypes.object,
 };
 
 export default ProductSummaryCard;
