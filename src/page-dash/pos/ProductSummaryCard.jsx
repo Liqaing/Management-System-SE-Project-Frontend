@@ -3,7 +3,6 @@ import { Button, Divider, Flex, Image, Typography } from "antd";
 import PropTypes from "prop-types";
 
 const ProductSummaryCard = ({ orderProduct }) => {
-  console.log(orderProduct.product.id);
   return (
     <div>
       <Flex className="p-0" gap={16}>
@@ -42,7 +41,7 @@ const ProductSummaryCard = ({ orderProduct }) => {
               $ {orderProduct.product.price}
             </Typography.Text>
 
-            <Flex gap={8} className="rounded-2xl h-fit bg-gray-200 mr-4">
+            <Flex gap={2} className="rounded-2xl h-fit bg-gray-200 mr-4">
               <Button shape="circle" size="small">
                 <MinusOutlined />
               </Button>

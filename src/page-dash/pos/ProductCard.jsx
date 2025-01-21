@@ -3,7 +3,13 @@ import { Button, Card, Flex, Image, Typography } from "antd";
 import Paragraph from "antd/es/typography/Paragraph";
 import PropTypes from "prop-types";
 
-const ProductCard = ({ product, addProductQty }) => {
+const ProductCard = ({
+  product,
+  orderQuantity,
+  addProductQty,
+  minusProductQty,
+}) => {
+  console.log(orderQuantity);
   return (
     <Card size="small">
       <Flex vertical gap={8}>
@@ -36,10 +42,10 @@ const ProductCard = ({ product, addProductQty }) => {
               src={product.productImage[0].imageUrl}
               alt={"Product Image"}
               loading="lazy"
-              width={70}
-              height={70}
               fallback="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMIAAADDCAYAAADQvc6UAAABRWlDQ1BJQ0MgUHJvZmlsZQAAK..."
               className="rounded"
+              width={70}
+              height={70}
             />
           ) : (
             <Image
@@ -60,10 +66,15 @@ const ProductCard = ({ product, addProductQty }) => {
           <p className="text-2xl mb-0">$ {product.price}</p>
 
           <Flex gap={8} className="rounded-2xl bg-gray-200">
-            <Button shape="circle">
+            <Button
+              shape="circle"
+              onClick={() => {
+                minusProductQty(product, 1);
+              }}
+            >
               <MinusOutlined />
             </Button>
-            <Button type="text">0</Button>
+            <Button type="text">{orderQuantity}</Button>
             <Button
               shape="circle"
               onClick={() => {
@@ -81,6 +92,7 @@ const ProductCard = ({ product, addProductQty }) => {
 
 ProductCard.propTypes = {
   product: PropTypes.object,
+  orderQuantity: PropTypes.number,
   addProductQty: PropTypes.func,
 };
 

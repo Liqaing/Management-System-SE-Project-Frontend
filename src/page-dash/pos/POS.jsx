@@ -79,12 +79,47 @@ const POS = () => {
           { product: product, orderQuantity: qty },
         ]);
       }
+      console.log(orderProducts);
       return;
     }
+
+    console.log(orderProducts);
 
     // Add the product as a new entry
     setOrderProducts([{ product: product, orderQuantity: qty }]);
     return;
+  };
+
+  const minusOrderProduct = async (product, qty) => {
+    if (!orderProducts) {
+      return;
+    }
+
+    const existingProduct = orderProducts.find(
+      (orderProduct) => orderProduct.product.id === product.id
+    );
+
+    if (existingProduct) {
+      // Update the quantity of the existing product
+      if (existingProduct.orderQuantity > 1) {
+        setOrderProducts(
+          orderProducts.map((orderProduct) =>
+            orderProduct.product.id === product.id
+              ? {
+                  ...orderProduct,
+                  orderQuantity: orderProduct.orderQuantity - qty,
+                }
+              : orderProduct
+          )
+        );
+      } else {
+        setOrderProducts(
+          orderProducts.filter(
+            (orderProduct) => orderProduct.product.id !== product.id
+          )
+        );
+      }
+    }
   };
 
   return (
@@ -99,7 +134,7 @@ const POS = () => {
             label: category.categoryName,
             key: index,
             children: (
-              <div>
+              <div style={{ paddingLeft: 0 }}>
                 <div className={styles.containInputSearch}>
                   <Input.Search
                     placeholder="Enter product ID"
@@ -108,16 +143,25 @@ const POS = () => {
                     onChange={(e) => setTxtSearchId(e.target.value)}
                   />
                 </div>
-                <Row gutter={16}>
+                <div className="grid grid-cols-2 md:grid-cols-2 gap-3 p-2">
                   {category.product.map((product, proIndex) => (
-                    <Col key={proIndex} span={8}>
+                    <Col key={proIndex}>
                       <ProductCard
                         product={product}
                         addProductQty={addOrderProduct}
+                        minusProductQty={minusOrderProduct}
+                        orderQuantity={
+                          (orderProducts &&
+                            orderProducts.find(
+                              (orderProduct) =>
+                                orderProduct.product.id === product.id
+                            )?.orderQuantity) ||
+                          0
+                        }
                       />
                     </Col>
                   ))}
-                </Row>
+                </div>
               </div>
             ),
           }))}
@@ -149,7 +193,7 @@ const POS = () => {
                 onChange={(value) => setPaymentMethodId(value)}
                 placeholder="Payment Method"
                 size="small"
-                style={{ width: "70%" }}
+                style={{ width: "60%" }}
               >
                 {paymentMethodList.map((item, index) => (
                   <Select.Option key={index} value={item.payment_method_id}>
@@ -163,12 +207,12 @@ const POS = () => {
               <Input
                 placeholder="010101231"
                 size="small"
-                style={{ width: "70%" }}
+                style={{ width: "60%" }}
               ></Input>
             </Flex>
             <Flex justify="space-between">
               <Typography.Text>Coupon Code</Typography.Text>
-              <Space.Compact style={{ width: "70%" }}>
+              <Space.Compact style={{ width: "60%" }}>
                 <Input placeholder="AA1611" size="small"></Input>
                 <Button size="small" type="primary">
                   Apply
@@ -180,7 +224,7 @@ const POS = () => {
               <TextArea
                 rows={2}
                 placeholder="Remark"
-                style={{ width: "70%" }}
+                style={{ width: "60%" }}
               ></TextArea>
             </Flex>
           </Flex>
