@@ -17,6 +17,8 @@ import { request } from "../../utils/request";
 import ProductCard from "./ProductCard";
 import ProductSummaryCard from "./ProductSummaryCard";
 import TextArea from "antd/es/input/TextArea";
+import ErrorAlert from "../../component/ui/ErrorAlert";
+import SuccessAlert from "../../component/ui/SuccessAlert";
 
 const POS = () => {
   const [loading, setLoading] = useState(false);
@@ -58,20 +60,46 @@ const POS = () => {
       setTotal(0);
       return;
     }
-  
+
     // Calculate subtotal
     const newSubTotal = orderProducts.reduce(
-      (acc, orderProduct) => acc + orderProduct.product.price * orderProduct.orderQuantity,
+      (acc, orderProduct) =>
+        acc + orderProduct.product.price * orderProduct.orderQuantity,
       0
     );
-  
+
     setSubTotal(newSubTotal);
     setTotal(newSubTotal - discount);
   }, [orderProducts, discount]);
-  
 
-  const handleCheckout = () => {
-    // Implement the checkout logic here
+  const handleCheckout = async () => {
+    if (!orderProducts || orderProducts.length === 0) {
+      ErrorAlert(undefined, "No items in the order.");
+      return;
+    }
+
+    const payload = {
+      paymentMethod: paymentMethodId || "Cash",
+      remark: document.querySelector("textarea").value || "",
+      items: orderProducts.map((orderProduct) => ({
+        productId: orderProduct.product.id,
+        orderQuantity: orderProduct.orderQuantity,
+        categoryName: orderProduct.product.categoryName,
+        productName: orderProduct.product.name,
+      })),
+      couponId: 2,
+    };
+
+    console.log("Checkout Payload:", payload);
+
+    try {
+      const response = await request("/api/order/counter", "POST", payload);
+      SuccessAlert(undefined, "Order successfully!");
+    } catch (error) {
+      console.error("Checkout failed:", error);
+      // alert("Failed to place order.");
+      ErrorAlert(undefined, "Failed to order.");
+    }
   };
 
   const addOrderProduct = async (product, qty) => {

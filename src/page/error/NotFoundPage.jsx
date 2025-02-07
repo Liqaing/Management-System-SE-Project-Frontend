@@ -1,33 +1,22 @@
-import React from 'react';
+import React from "react";
+import { Result, Button } from "antd";
+import { Link } from "react-router-dom";
 
 const NotFoundPage = () => {
   return (
-    <div style={styles.container}>
-      <h1 style={styles.heading}>404 - Page Not Found</h1>
-      <p style={styles.paragraph}>The page you are looking for might have been removed or its name changed or is temporarily unavailable.</p>
+    <div className="flex items-center justify-center h-screen">
+      <Result
+        status="404"
+        title="404"
+        subTitle="Sorry, the page you visited does not exist."
+        extra={
+          <Link to="/">
+            <Button type="primary">Back to Home</Button>
+          </Link>
+        }
+      />
     </div>
   );
-};
-
-const styles = {
-  container: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: '100vh',
-    fontFamily: 'Arial, sans-serif',
-  },
-  heading: {
-    fontSize: '2rem',
-    color: '#333',
-    marginBottom: '1rem',
-  },
-  paragraph: {
-    fontSize: '1rem',
-    color: '#666',
-    textAlign: 'center',
-  },
 };
 
 export default NotFoundPage;
