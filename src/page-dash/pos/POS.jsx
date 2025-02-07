@@ -52,9 +52,23 @@ const POS = () => {
   };
 
   useEffect(() => {
-    // Add any necessary side effects here
     getProduct();
-  }, []);
+    if (!orderProducts || orderProducts.length === 0) {
+      setSubTotal(0);
+      setTotal(0);
+      return;
+    }
+  
+    // Calculate subtotal
+    const newSubTotal = orderProducts.reduce(
+      (acc, orderProduct) => acc + orderProduct.product.price * orderProduct.orderQuantity,
+      0
+    );
+  
+    setSubTotal(newSubTotal);
+    setTotal(newSubTotal - discount);
+  }, [orderProducts, discount]);
+  
 
   const handleCheckout = () => {
     // Implement the checkout logic here
@@ -130,142 +144,141 @@ const POS = () => {
   return (
     <div className="p-5">
       <Flex className="flex h-full w-full overflow-hidden">
-      <Col span={18}>
-        <Tabs
-          defaultActiveKey="1"
-          tabPosition="left"
-          className="h-full"
-          items={proListByCategory.map((category, index) => ({
-            label: category.categoryName,
-            key: index,
-            children: (
-              <div style={{ paddingLeft: 0 }}>
-                <div className={styles.containInputSearch}>
-                  <Input.Search
-                    placeholder="Enter product ID"
-                    allowClear
-                    value={txtSearchId}
-                    onChange={(e) => setTxtSearchId(e.target.value)}
-                  />
-                  <Input.Search
-                    className="ml-2"
-                    placeholder="Enter product Name"
-                    allowClear
-                    value={txtSearchId}
-                    onChange={(e) => setTxtSearchId(e.target.value)}
-                  />
+        <Col span={18}>
+          <Tabs
+            defaultActiveKey="1"
+            tabPosition="left"
+            className="h-full"
+            items={proListByCategory.map((category, index) => ({
+              label: category.categoryName,
+              key: index,
+              children: (
+                <div style={{ paddingLeft: 0 }}>
+                  <div className={styles.containInputSearch}>
+                    <Input.Search
+                      placeholder="Enter product ID"
+                      allowClear
+                      value={txtSearchId}
+                      onChange={(e) => setTxtSearchId(e.target.value)}
+                    />
+                    <Input.Search
+                      className="ml-2"
+                      placeholder="Enter product Name"
+                      allowClear
+                      value={txtSearchId}
+                      onChange={(e) => setTxtSearchId(e.target.value)}
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 md:grid-cols-2 gap-3 p-2">
+                    {category.product.map((product, proIndex) => (
+                      <Col key={proIndex}>
+                        <ProductCard
+                          product={product}
+                          addProductQty={addOrderProduct}
+                          minusProductQty={minusOrderProduct}
+                          orderQuantity={
+                            (orderProducts &&
+                              orderProducts.find(
+                                (orderProduct) =>
+                                  orderProduct.product.id === product.id
+                              )?.orderQuantity) ||
+                            0
+                          }
+                        />
+                      </Col>
+                    ))}
+                  </div>
                 </div>
-                <div className="grid grid-cols-2 md:grid-cols-2 gap-3 p-2">
-                  {category.product.map((product, proIndex) => (
-                    <Col key={proIndex}>
-                      <ProductCard
-                        product={product}
-                        addProductQty={addOrderProduct}
-                        minusProductQty={minusOrderProduct}
-                        orderQuantity={
-                          (orderProducts &&
-                            orderProducts.find(
-                              (orderProduct) =>
-                                orderProduct.product.id === product.id
-                            )?.orderQuantity) ||
-                          0
-                        }
-                      />
-                    </Col>
-                  ))}
-                </div>
-              </div>
-            ),
-          }))}
-        />
-      </Col>
+              ),
+            }))}
+          />
+        </Col>
 
-      <Col className="border p-2 border-gray-100 h-full" span={6}>
-        <Flex vertical className="h-full" gap={16}>
-          <Typography.Title level={3} style={{ marginBottom: "0px" }}>
-            Summary
-          </Typography.Title>
-          <Flex vertical gap={4} className="h-full overflow-y-scroll">
-            {orderProducts &&
-              orderProducts.map((orderProduct, proIndex) => {
-                return (
-                  <ProductSummaryCard
-                    key={proIndex}
-                    orderProduct={orderProduct}
-                  />
-                );
-              })}
-          </Flex>
-          <Divider style={{ margin: "5px 0" }} />
-          <Flex vertical gap={8}>
-            <Flex justify="space-between">
-              <Typography.Text>Payment Method</Typography.Text>
-              <Select
-                value={paymentMethodId}
-                onChange={(value) => setPaymentMethodId(value)}
-                placeholder="Payment Method"
-                size="small"
-                style={{ width: "60%" }}
-              >
-                {paymentMethodList.map((item) => (
-                  <Select.Option
-                    key={item.payment_method_id}
-                    value={item.payment_method_id}
-                  >
-                    {item.name}
-                  </Select.Option>
-                ))}
-              </Select>
+        <Col className="border p-2 border-gray-100 h-full" span={6}>
+          <Flex vertical className="h-full" gap={16}>
+            <Typography.Title level={3} style={{ marginBottom: "0px" }}>
+              Summary
+            </Typography.Title>
+            <Flex vertical gap={4} className="h-full overflow-y-scroll">
+              {orderProducts &&
+                orderProducts.map((orderProduct, proIndex) => {
+                  return (
+                    <ProductSummaryCard
+                      key={proIndex}
+                      orderProduct={orderProduct}
+                    />
+                  );
+                })}
             </Flex>
-            <Flex justify="space-between">
-              <Typography.Text>Customer Tel</Typography.Text>
-              <Input
-                placeholder="Telephone"
-                size="small"
-                style={{ width: "60%" }}
-              ></Input>
+            <Divider style={{ margin: "5px 0" }} />
+            <Flex vertical gap={8}>
+              <Flex justify="space-between">
+                <Typography.Text>Payment Method</Typography.Text>
+                <Select
+                  value={paymentMethodId}
+                  onChange={(value) => setPaymentMethodId(value)}
+                  placeholder="Payment Method"
+                  size="small"
+                  style={{ width: "60%" }}
+                >
+                  {paymentMethodList.map((item) => (
+                    <Select.Option
+                      key={item.payment_method_id}
+                      value={item.payment_method_id}
+                    >
+                      {item.name}
+                    </Select.Option>
+                  ))}
+                </Select>
+              </Flex>
+              <Flex justify="space-between">
+                <Typography.Text>Customer Tel</Typography.Text>
+                <Input
+                  placeholder="Telephone"
+                  size="small"
+                  style={{ width: "60%" }}
+                ></Input>
+              </Flex>
+              <Flex justify="space-between">
+                <Typography.Text>Coupon Code</Typography.Text>
+                <Space.Compact style={{ width: "60%" }}>
+                  <Input placeholder="Coupon Code" size="small"></Input>
+                  <Button size="small" type="primary">
+                    Apply
+                  </Button>
+                </Space.Compact>
+              </Flex>
+              <Flex justify="space-between">
+                <Typography.Text>Remark</Typography.Text>
+                <TextArea
+                  rows={2}
+                  placeholder="Remark"
+                  style={{ width: "60%" }}
+                ></TextArea>
+              </Flex>
             </Flex>
-            <Flex justify="space-between">
-              <Typography.Text>Coupon Code</Typography.Text>
-              <Space.Compact style={{ width: "60%" }}>
-                <Input placeholder="Coupon Code" size="small"></Input>
-                <Button size="small" type="primary">
-                  Apply
-                </Button>
-              </Space.Compact>
-            </Flex>
-            <Flex justify="space-between">
-              <Typography.Text>Remark</Typography.Text>
-              <TextArea
-                rows={2}
-                placeholder="Remark"
-                style={{ width: "60%" }}
-              ></TextArea>
-            </Flex>
-          </Flex>
-          <Divider style={{ margin: "5px 0" }} />
-          <Flex vertical gap={0} className="w-full">
+            <Divider style={{ margin: "5px 0" }} />
+
             <Flex justify="space-between" className="w-full">
               <Typography.Text className="text-left">
                 Sub Total:
               </Typography.Text>
               <Flex justify="space-between" className="w-3/12">
                 <Typography.Text>$</Typography.Text>
-                <Typography.Text className="text-end">0</Typography.Text>
+                <Typography.Text className="text-end">
+                  {subTotal.toFixed(2)}
+                </Typography.Text>
               </Flex>
             </Flex>
             <Flex justify="space-between" className="w-full">
               <Typography.Text className="text-left">Discount:</Typography.Text>
               <Flex justify="space-between" className="w-3/12">
                 <Typography.Text>$</Typography.Text>
-                <Typography.Text className="text-end">-0</Typography.Text>
+                <Typography.Text className="text-end">
+                  -{discount.toFixed(2)}
+                </Typography.Text>
               </Flex>
             </Flex>
-            <Divider
-              dashed
-              style={{ margin: "0px" }}
-              className="text-orange-400"
-            />
             <Flex justify="space-between" className="w-full">
               <Typography.Text className="text-left text-lg font-bold text-orange-400">
                 Total:
@@ -275,19 +288,18 @@ const POS = () => {
                   $
                 </Typography.Text>
                 <Typography.Text className="text-end text-lg font-bold">
-                  0
+                  {total.toFixed(2)}
                 </Typography.Text>
               </Flex>
             </Flex>
-          </Flex>
 
-          <Button block onClick={handleCheckout} type="primary">
-            Checkout
-          </Button>
-        </Flex>
-      </Col>
-      {/* </MainPageDash> */}
-    </Flex>
+            <Button block onClick={handleCheckout} type="primary">
+              Checkout
+            </Button>
+          </Flex>
+        </Col>
+        {/* </MainPageDash> */}
+      </Flex>
     </div>
   );
 };
