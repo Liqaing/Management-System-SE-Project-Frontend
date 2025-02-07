@@ -29,10 +29,15 @@ const POS = () => {
   const [total, setTotal] = useState(0);
   const [discount, setDiscount] = useState(0);
 
-  const [paymentMethodList, setPaymentMethodList] = useState([]);
+  // const [paymentMethodList, setPaymentMethodList] = useState([]);
 
   const [customerId, setCustomerId] = useState();
   const [paymentMethodId, setPaymentMethodId] = useState();
+
+  const paymentMethodList = [
+    { payment_method_id: "case", name: "Case" },
+    { payment_method_id: "khqr", name: "KHQR" },
+  ];
 
   const getProduct = async () => {
     const res = await request(
@@ -123,8 +128,8 @@ const POS = () => {
   };
 
   return (
-    // <MainPageDash loading={loading}>
-    <Flex className="flex h-full w-full overflow-hidden">
+    <div className="p-5">
+      <Flex className="flex h-full w-full overflow-hidden">
       <Col span={18}>
         <Tabs
           defaultActiveKey="1"
@@ -138,6 +143,13 @@ const POS = () => {
                 <div className={styles.containInputSearch}>
                   <Input.Search
                     placeholder="Enter product ID"
+                    allowClear
+                    value={txtSearchId}
+                    onChange={(e) => setTxtSearchId(e.target.value)}
+                  />
+                  <Input.Search
+                    className="ml-2"
+                    placeholder="Enter product Name"
                     allowClear
                     value={txtSearchId}
                     onChange={(e) => setTxtSearchId(e.target.value)}
@@ -195,9 +207,12 @@ const POS = () => {
                 size="small"
                 style={{ width: "60%" }}
               >
-                {paymentMethodList.map((item, index) => (
-                  <Select.Option key={index} value={item.payment_method_id}>
-                    {item.payment_method_id}-{item.name}
+                {paymentMethodList.map((item) => (
+                  <Select.Option
+                    key={item.payment_method_id}
+                    value={item.payment_method_id}
+                  >
+                    {item.name}
                   </Select.Option>
                 ))}
               </Select>
@@ -205,7 +220,7 @@ const POS = () => {
             <Flex justify="space-between">
               <Typography.Text>Customer Tel</Typography.Text>
               <Input
-                placeholder="010101231"
+                placeholder="Telephone"
                 size="small"
                 style={{ width: "60%" }}
               ></Input>
@@ -213,7 +228,7 @@ const POS = () => {
             <Flex justify="space-between">
               <Typography.Text>Coupon Code</Typography.Text>
               <Space.Compact style={{ width: "60%" }}>
-                <Input placeholder="AA1611" size="small"></Input>
+                <Input placeholder="Coupon Code" size="small"></Input>
                 <Button size="small" type="primary">
                   Apply
                 </Button>
@@ -236,14 +251,14 @@ const POS = () => {
               </Typography.Text>
               <Flex justify="space-between" className="w-3/12">
                 <Typography.Text>$</Typography.Text>
-                <Typography.Text className="text-end">100</Typography.Text>
+                <Typography.Text className="text-end">0</Typography.Text>
               </Flex>
             </Flex>
             <Flex justify="space-between" className="w-full">
               <Typography.Text className="text-left">Discount:</Typography.Text>
               <Flex justify="space-between" className="w-3/12">
                 <Typography.Text>$</Typography.Text>
-                <Typography.Text className="text-end">-100</Typography.Text>
+                <Typography.Text className="text-end">-0</Typography.Text>
               </Flex>
             </Flex>
             <Divider
@@ -260,7 +275,7 @@ const POS = () => {
                   $
                 </Typography.Text>
                 <Typography.Text className="text-end text-lg font-bold">
-                  100
+                  0
                 </Typography.Text>
               </Flex>
             </Flex>
@@ -273,6 +288,7 @@ const POS = () => {
       </Col>
       {/* </MainPageDash> */}
     </Flex>
+    </div>
   );
 };
 

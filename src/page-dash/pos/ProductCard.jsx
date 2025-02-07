@@ -9,83 +9,64 @@ const ProductCard = ({
   addProductQty,
   minusProductQty,
 }) => {
-  console.log(orderQuantity);
   return (
-    <Card size="small">
-      <Flex vertical gap={8}>
-        <Flex className="p-0" gap={16}>
-          {product.productImage && product.productImage.length > 0 ? (
-            // Corusel does not work properly in tabs
-            // <Carousel
-            //   arrows
-            //   infinite={true}
-            //   key={product.productImage.map((img) => img.id).join(",")}
-            // >
-            //   {product.productImage.map((image, index) => (
-            //     <div
-            //       key={index}
-            //       className="!flex justify-center items-center content-center"
-            //     >
-            //       <Image
-            //         src={image.imageUrl}
-            //         alt={`Product Image ${index + 1}`}
-            //         loading="lazy"
-            //         width={70}
-            //         height={70}
-            //         fallback="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMIAAADDCAYAAADQvc6UAAABRWlDQ1BJQ0MgUHJvZmlsZQAAK..."
-            //         className="rounded"
-            //       />
-            //     </div>
-            //   ))}
-            // </Carousel>
-            <Image
-              src={product.productImage[0].imageUrl}
-              alt={"Product Image"}
-              loading="lazy"
-              fallback="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMIAAADDCAYAAADQvc6UAAABRWlDQ1BJQ0MgUHJvZmlsZQAAK..."
-              className="rounded"
-              width={70}
-              height={70}
-            />
-          ) : (
-            <Image
-              src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMIAAADDCAYAAADQvc6UAAABRWlDQ1BJQ0MgUHJvZmlsZQAAK..."
-              loading="lazy"
-              width={70}
-              height={70}
-              className="rounded"
-            />
-          )}
-          <Flex vertical>
-            <Typography.Title level={5}>{product.productName}</Typography.Title>
-            <Paragraph ellipsis>{product.description}</Paragraph>
+    <Card size="small" style={{ height: 200, overflow: "hidden" }}>
+      <div style={{ maxHeight: 160, overflowY: "auto", paddingRight: 8 }}>
+        <Flex vertical gap={8}>
+          <Flex className="p-0" gap={16}>
+            {product.productImage && product.productImage.length > 0 ? (
+              <Image
+                src={product.productImage[0].imageUrl}
+                alt={"Product Image"}
+                loading="lazy"
+                className="rounded"
+                width={70}
+                height={70}
+              />
+            ) : (
+              <Image
+                src="data:image/png;base64,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"
+                loading="lazy"
+                width={70}
+                height={70}
+                className="rounded"
+              />
+            )}
+            <Flex vertical>
+              <Typography.Title level={5}>
+                {product.productName}
+              </Typography.Title>
+              <Paragraph ellipsis={{ rows: 2, expandable: true }}>
+                {product.description}
+              </Paragraph>
+            </Flex>
+          </Flex>
+
+          <Flex justify="space-between" className="h-fit m-0">
+            <p className="text-2xl mb-0">$ {product.price}</p>
+
+            <Flex gap={8} className="rounded-2xl bg-gray-200">
+              <Button
+                shape="circle"
+                onClick={() => {
+                  minusProductQty(product, 1);
+                }}
+              >
+                <MinusOutlined />
+              </Button>
+              <Button type="text">{orderQuantity}</Button>
+              <Button
+                shape="circle"
+                onClick={() => {
+                  addProductQty(product, 1);
+                }}
+              >
+                <PlusOutlined />
+              </Button>
+            </Flex>
           </Flex>
         </Flex>
-
-        <Flex justify="space-between" className="h-fit m-0">
-          <p className="text-2xl mb-0">$ {product.price}</p>
-
-          <Flex gap={8} className="rounded-2xl bg-gray-200">
-            <Button
-              shape="circle"
-              onClick={() => {
-                minusProductQty(product, 1);
-              }}
-            >
-              <MinusOutlined />
-            </Button>
-            <Button type="text">{orderQuantity}</Button>
-            <Button
-              shape="circle"
-              onClick={() => {
-                addProductQty(product, 1);
-              }}
-            >
-              <PlusOutlined />
-            </Button>
-          </Flex>
-        </Flex>
-      </Flex>
+      </div>
     </Card>
   );
 };
@@ -94,6 +75,8 @@ ProductCard.propTypes = {
   product: PropTypes.object,
   orderQuantity: PropTypes.number,
   addProductQty: PropTypes.func,
+  minusProductQty: PropTypes.func,
 };
 
 export default ProductCard;
+``
