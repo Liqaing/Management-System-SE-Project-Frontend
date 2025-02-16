@@ -1,11 +1,5 @@
-
-
-import React from 'react'
-
 const HomePageDash = () => {
-  return (
-    <div>HomePageDash</div>
-  )
-}
+  return <div>HomePageDash</div>;
+};
 
-export default HomePageDash
+export default HomePageDash;

@@ -1,4 +1,3 @@
-import { MinusOutlined, PlusOutlined } from "@ant-design/icons";
 import { Button, Divider, Flex, Image, Typography } from "antd";
 import PropTypes from "prop-types";
 

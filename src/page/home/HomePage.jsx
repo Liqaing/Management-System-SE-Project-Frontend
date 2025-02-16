@@ -35,7 +35,7 @@ const HomePage = () => {
         <div className="flex flex-wrap items-center justify-around gap-5">
           {restaurant.map((item, index) => {
             return (
-              <div>
+              <div key={index}>
                 <RestaurantCart />
               </div>
             );

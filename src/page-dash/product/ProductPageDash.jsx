@@ -142,7 +142,6 @@ const ProductPageDash = () => {
     formData.append("price", values.price);
     formData.append("qty", values.qty);
     formData.append("categoryId", values.category);
-
     // Check if values.images is an array before iterating
     if (
       values.images &&

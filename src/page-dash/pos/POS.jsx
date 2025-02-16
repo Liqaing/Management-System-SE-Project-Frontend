@@ -5,13 +5,11 @@ import {
   Divider,
   Flex,
   Input,
-  Row,
   Select,
   Space,
   Tabs,
   Typography,
 } from "antd";
-import MainPageDash from "../mainpage/MainPageDash";
 import styles from "./styles.module.css";
 import { request } from "../../utils/request";
 import ProductCard from "./ProductCard";
@@ -20,26 +18,28 @@ import TextArea from "antd/es/input/TextArea";
 import ErrorAlert from "../../component/ui/ErrorAlert";
 import SuccessAlert from "../../component/ui/SuccessAlert";
 
+const paymentMethodList = [
+  { payment_method_id: "cash", name: "Cash" },
+  { payment_method_id: "khqr", name: "KHQR" },
+];
+
 const POS = () => {
-  const [loading, setLoading] = useState(false);
   const [proListByCategory, setProListByCategory] = useState([]);
   const [txtSearchId, setTxtSearchId] = useState("");
 
   const [orderProducts, setOrderProducts] = useState();
+
+  const [couponId, setCouponId] = useState(null);
+  const [couponCode, setCouponCode] = useState(null);
+  const [customerTel, setCustomerTel] = useState(null);
+  const [paymentMethod, setPaymentMethod] = useState();
+  const [remark, setRemark] = useState(null);
 
   const [subTotal, setSubTotal] = useState(0);
   const [total, setTotal] = useState(0);
   const [discount, setDiscount] = useState(0);
 
   // const [paymentMethodList, setPaymentMethodList] = useState([]);
-
-  const [customerId, setCustomerId] = useState();
-  const [paymentMethodId, setPaymentMethodId] = useState();
-
-  const paymentMethodList = [
-    { payment_method_id: "case", name: "Case" },
-    { payment_method_id: "khqr", name: "KHQR" },
-  ];
 
   const getProduct = async () => {
     const res = await request(
@@ -77,28 +77,34 @@ const POS = () => {
       ErrorAlert(undefined, "No items in the order.");
       return;
     }
-
+    console.log(orderProducts);
     const payload = {
-      paymentMethod: paymentMethodId || "Cash",
-      remark: document.querySelector("textarea").value || "",
+      paymentMethod: paymentMethod || "Cash",
+      remark: remark,
+      ...(couponId ? { couponId } : {}),
+      telephone: customerTel,
       items: orderProducts.map((orderProduct) => ({
         productId: orderProduct.product.id,
         orderQuantity: orderProduct.orderQuantity,
-        categoryName: orderProduct.product.categoryName,
-        productName: orderProduct.product.name,
+        categoryName: orderProduct.product.category.categoryName,
+        productName: orderProduct.product.productName,
       })),
-      couponId: 2,
     };
 
     console.log("Checkout Payload:", payload);
 
-    try {
-      const response = await request("/api/order/counter", "POST", payload);
+    const response = await request("/api/order/counter", "POST", payload);
+    if (!(response instanceof Error)) {
+      setSubTotal(0);
+      setCouponId(0);
+      setDiscount(0);
+      setOrderProducts(null);
+      setCouponCode(null);
+      setCouponId(null);
       SuccessAlert(undefined, "Order successfully!");
-    } catch (error) {
-      console.error("Checkout failed:", error);
-      // alert("Failed to place order.");
-      ErrorAlert(undefined, "Failed to order.");
+    } else {
+      console.error("Checkout failed:", response);
+      //   ErrorAlert(undefined, "Failed to order.");
     }
   };
 
@@ -169,6 +175,18 @@ const POS = () => {
     }
   };
 
+  const applyCoupon = async () => {
+    const payload = {
+      couponCode: couponCode,
+      couponType: "Counter",
+    };
+    console.log(payload);
+    const response = await request("/api/coupon/verify", "POST", payload, null);
+    if (!(response instanceof Error)) {
+      setCouponId(response.data.id);
+      setDiscount((subTotal * response.data.DiscountPercentage) / 100);
+    }
+  };
   return (
     <div className="p-5">
       <Flex className="flex h-full w-full overflow-hidden">
@@ -243,8 +261,8 @@ const POS = () => {
               <Flex justify="space-between">
                 <Typography.Text>Payment Method</Typography.Text>
                 <Select
-                  value={paymentMethodId}
-                  onChange={(value) => setPaymentMethodId(value)}
+                  value={paymentMethod}
+                  onChange={(value) => setPaymentMethod(value)}
                   placeholder="Payment Method"
                   size="small"
                   style={{ width: "60%" }}
@@ -265,13 +283,21 @@ const POS = () => {
                   placeholder="Telephone"
                   size="small"
                   style={{ width: "60%" }}
+                  onChange={(e) => setCustomerTel(e.target.value)}
                 ></Input>
               </Flex>
               <Flex justify="space-between">
                 <Typography.Text>Coupon Code</Typography.Text>
                 <Space.Compact style={{ width: "60%" }}>
-                  <Input placeholder="Coupon Code" size="small"></Input>
-                  <Button size="small" type="primary">
+                  <Input
+                    placeholder="Coupon Code"
+                    size="small"
+                    value={couponCode}
+                    onChange={(e) => {
+                      setCouponCode(e.target.value);
+                    }}
+                  ></Input>
+                  <Button size="small" type="primary" onClick={applyCoupon}>
                     Apply
                   </Button>
                 </Space.Compact>
@@ -282,6 +308,7 @@ const POS = () => {
                   rows={2}
                   placeholder="Remark"
                   style={{ width: "60%" }}
+                  onChange={(e) => setRemark(e.target.value)}
                 ></TextArea>
               </Flex>
             </Flex>
