@@ -31,6 +31,7 @@ import Payment from "./component/profile/Payment.jsx";
 import Events from "./component/profile/Events.jsx";
 import UserProfile from "./component/profile/UserProfile.jsx";
 import CouponPage from "./page-dash/coupon/CouponPage.jsx";
+import Kds from "./page-dash/kds/Kds.jsx";
 
 const ProtectedRoute = ({ user }) => {
   if (user === null) return <Navigate to="/account/signin" />;
@@ -94,6 +95,7 @@ const App = () => {
             <Route path="user/customer" element={<CustomerPageDash />} />
 
             <Route path="system/coupon" element={<CouponPage />} />
+            <Route path="system/kds" element={<Kds />} />
           </Route>
         </Route>
 

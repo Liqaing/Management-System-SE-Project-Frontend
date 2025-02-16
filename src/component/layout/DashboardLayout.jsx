@@ -33,7 +33,11 @@ const items = [
   getItem("POS", "/dashboard/pos", <DesktopOutlined />),
   getItem("Product", "/dashboard/product", <UserOutlined />, [
     getItem("Category", "/dashboard/product/category", <DesktopOutlined />),
-    getItem("Product List", "/dashboard/product/productList", <DesktopOutlined />),
+    getItem(
+      "Product List",
+      "/dashboard/product/productList",
+      <DesktopOutlined />
+    ),
   ]),
   getItem("User", "/dashboard/user", <UserOutlined />, [
     getItem("Employee", "/dashboard/user/employee"),
@@ -44,12 +48,21 @@ const items = [
     getItem("Order Status", "/dashboard/system/orderStatus"),
     getItem("Order Payment", "/dashboard/system/orderPayment"),
     getItem("Province", "/dashboard/system/province"),
+    getItem("KDS", "/dashboard/system/kds"),
   ]),
   getItem("Report", "/dashboard/report", <TeamOutlined />, [
     getItem("Top Sale", "/dashboard/report/topSale", <FileOutlined />),
     getItem("Sale Summary", "/dashboard/report/saleSummary", <FileOutlined />),
-    getItem("Sales by Category", "/dashboard/report/salesByCategory", <FileOutlined />),
-    getItem("Sales by Product", "/dashboard/report/salesByProduct", <FileOutlined />),
+    getItem(
+      "Sales by Category",
+      "/dashboard/report/salesByCategory",
+      <FileOutlined />
+    ),
+    getItem(
+      "Sales by Product",
+      "/dashboard/report/salesByProduct",
+      <FileOutlined />
+    ),
   ]),
   getItem("Logout", "/dashboard/logout", <LogoutOutlined />),
 ];
@@ -81,7 +94,11 @@ const DashboardLayout = () => {
         setUser(null);
       })
       .catch(async (err) => {
-        await ErrorAlert("Logout Failed", err.response?.data?.error.message || "An error occurred during logout.");
+        await ErrorAlert(
+          "Logout Failed",
+          err.response?.data?.error.message ||
+            "An error occurred during logout."
+        );
       });
   };
 
@@ -91,7 +108,9 @@ const DashboardLayout = () => {
       label: (
         <>
           <MdManageAccounts className="size-5 mr-1 text-blue-500" />
-          <a href="#" className="text-blue-500">My Account</a>
+          <a href="#" className="text-blue-500">
+            My Account
+          </a>
         </>
       ),
     },
@@ -109,7 +128,7 @@ const DashboardLayout = () => {
       label: (
         <>
           <FiLogOut className="size-4 mr-1 text-red-500" />
-          <a onClick={handleLogout} >Logout</a>
+          <a onClick={handleLogout}>Logout</a>
         </>
       ),
     },
